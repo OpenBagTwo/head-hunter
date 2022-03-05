@@ -2,8 +2,8 @@
 	"pack": {
 		"pack_format": 9,
 		"description": [
-			{"text":"Custom Wandering Head Trader,"color":"navy"},
-			"text":"\nVERSION,"color":"teal"},
+			{"text":"Custom Wandering Head Trader","color":"navy"},
+			{"text":"\nVERSION","color":"teal"},
 			{"text":"\nBased on a pack from vanillatweaks.net","color":"gold"}
 		]
 	}
