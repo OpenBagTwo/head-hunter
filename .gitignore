@@ -3,7 +3,7 @@
 *.tar.*
 
 # Vanilla Tweaks assets
-head\ hunter/
+Head\ Hunter/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
