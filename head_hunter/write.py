@@ -1,7 +1,6 @@
 """Utilities for writing / updating datapack files"""
 
 import datetime as dt
-import json
 from os import PathLike
 from pathlib import Path
 from typing import Optional, Union
@@ -32,11 +31,10 @@ def write_mcmeta(
     Raises
     ------
     FileNotFoundError
-        If the specified template file doesn't exist
+        If the specified template file doesn't exist, or if the pack
+        folder doesn't exist (meaning you haven't downloaded the base datapack)
     PermissionError
         If you don't have the ability to open the template file
-    RuntimeError
-        If the pack folder doesn't exist (meaning you haven't downloaded the base datapack)
     """
     if template_path is None:
         template_path = Path(__file__).parent / "templates" / "pack.mcmeta"
