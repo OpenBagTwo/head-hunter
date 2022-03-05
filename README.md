@@ -6,12 +6,25 @@ with player head trades
 **The entire credit for the datapack itself** goes to the [**Vanilla Tweaks**](https://vanillatweaks.net)
 team and their Wandering Trades datapack upon which this is based.
 
-## Installation
+## Installation and Setup
 
 This scripts in this repo require python 3.6 or newer and requires no other dependencies to run.
 
 Thus, all you need to do to run these scripts is to download this repo and run the commands below from the
 project's root folder.
+
+You'll also need to grab yourself a copy of the Wandering Trader datapack.
+1. Go to the Vanilla Tweaks [datapacks page](https://vanillatweaks.net/picker/datapacks/)
+1. Under "Hermitcraft," select "Wandering Trades (Hermit Edition)"
+1. Download the zip archive and extract the "UNZIP_ME" parent zip file
+1. Extract the contents of the "wandering trades hermit edition" zip file to a folder named
+   `Head Hunter` located in the project root folder (or your current working directory if you
+   installed this package via pip)
+
+You should now have a folder named `Head Hunter` whose top-level contents are:
+* a `data` directory
+* a file named `pack.mcmeta`
+* an icon named `pack.png`
 
 ## Usage
 
