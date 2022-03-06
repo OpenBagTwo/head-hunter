@@ -1,4 +1,5 @@
 """Utilities for parsing an existing trade list"""
+import json
 import re
 from os import PathLike
 from typing import Dict, List, Optional, Union
@@ -36,8 +37,7 @@ def parse_trades(
     Raises
     ------
     FileNotFoundError
-        If the specified trade file doesn't exist, or if the pack
-        folder doesn't exist (meaning you haven't downloaded the base datapack)
+        If the specified trade file doesn't exist
     PermissionError
         If you don't have the ability to open the trade file
     RuntimeError
@@ -83,15 +83,73 @@ def parse_trades(
             # using simple spec
             player_head_trades.append(player_head_spec.split(":")[1])
         else:
-            match = re.search(r"Name:.*?},", player_head_spec)
+            match = re.search(r"Name:.*?,", player_head_spec)
             if not match:
                 raise RuntimeError(parse_fail_message)
-            player_name = match.group(0)[5:-2]
+            player_name = match.group(0)[5:-1]
 
             match = re.search(r'\\"text\\":.*}"', player_name)
             if match:
                 player_name = match.group(0)[9:-2]
 
-            player_name = re.sub(r'\\"|\xA7.', "", player_name)
+            player_name = re.sub(r'\\?"|\xA7.|}', "", player_name)
             player_head_trades.append({player_name: player_head_spec})
     return player_head_trades
+
+
+def parse_mob_head_specs(
+    mob_file_path: Union[str, bytes, PathLike]
+) -> List[Dict[str, str]]:
+    """Extract head specs from a "More Mob Heads" datapack loot table.
+    For`more mob heads v2.9.4.zip` these loot tables are found at:
+    `/data/minecraft/loot_tables/entities/`
+
+    Parameters
+    ----------
+    mob_file_path: path-like
+        Path to the mob loot table file you'd like to parse.
+
+    Returns
+    -------
+    List of 1-item dicts
+        list of player-head specifications, in the form
+        {mob_name: full_spec} such that calling
+        ```
+        /give @s minecraft:player_head{full_spec}
+        ```
+        would give you that head
+
+    Raises
+    ------
+    FileNotFoundError
+        If the specified file doesn't exist, or if the pack
+        folder doesn't exist
+    PermissionError
+        If you don't have the ability to open the file
+    JSONDecodeError
+        If the specified file is not valid JSON
+    """
+    loot_table = json.load(open(mob_file_path))
+    head_drops = []
+    for pool in loot_table["pools"]:
+        for entry in pool["entries"]:
+            if "children" in entry:
+                for drop in entry["children"]:
+                    if drop["name"] == "minecraft:player_head":
+                        head_drops.append(drop)
+            if entry.get("name", "") == "minecraft:player_head":
+                head_drops.append(entry)
+
+    head_specs = []
+    for drop in head_drops:
+        for head_function in drop["functions"]:
+            head_spec = head_function["tag"]
+            match = re.search(r'Name:".*?"', head_spec)
+            if not match:
+                name = "???"
+                # name isn't actually used for anything anyway
+            else:
+                name = match.group(0)[6:-1]
+            head_specs.append({name: head_spec[1:-1]})
+
+    return head_specs
