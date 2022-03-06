@@ -13,7 +13,7 @@ def make_zip(destination_path: Optional[Union[str, bytes, PathLike]] = None):
 
     Parameters
     ----------
-    destination_path: path-like, optional
+    destination_path : path-like, optional
         The file path where you'd like to save the zip file.
         DO NOT include the ".zip" extension.
         If None is specified, the file will be saved as

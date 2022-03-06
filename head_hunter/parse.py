@@ -13,7 +13,7 @@ def parse_trades(
 
     Parameters
     ----------
-    trade_file_path: path-like, optional
+    trade_file_path : path-like, optional
         The path to the trade list you want to parse. If None is specified,
         this method will load add_trade.mcfunction from the appropriate spot
         in the pack folder.
@@ -26,8 +26,8 @@ def parse_trades(
         ```
         /give @s minecraft:player_head{SkullOwner:player_name}
         ```
-        would give you the specified head, or a dict {player_name: full_spec}
-        such that calling
+        would give you the specified head, or single-item dicts
+        {player_name: full_spec} such that calling
         ```
         /give @s minecraft:player_head{full_spec}
         ```
