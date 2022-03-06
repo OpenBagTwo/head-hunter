@@ -100,7 +100,7 @@ def write_trades(
     with open(template_path) as template_file:
         template = template_file.readlines()
 
-    header = template[:-1]
+    header = template[:-2]
 
     command_template = "".join(template[-2:])
 
