@@ -2,20 +2,20 @@
 import json
 import re
 from os import PathLike
-from typing import Dict, List, Optional, Union
+from typing import IO, Dict, List, Optional, Union
 
 from . import PACK_FOLDER
 
 
 def parse_trades(
-    trade_file_path: Optional[Union[str, bytes, PathLike]] = None
+    trade_file: Optional[Union[str, bytes, PathLike, IO]] = None
 ) -> List[Union[str, Dict[str, str]]]:
     """Parse an existing trade list
 
     Parameters
     ----------
-    trade_file_path : path-like, optional
-        The path to the trade list you want to parse. If None is specified,
+    trade_file_path : path-like or file-like, optional
+        The trade list you want to parse. If None is specified,
         this method will load add_trade.mcfunction from the appropriate spot
         in the pack folder.
 
@@ -47,16 +47,22 @@ def parse_trades(
     -----
     This function is not smart enough to detect if the full spec doesn't actually match the "skull owner"
     """
-    if trade_file_path is None:
-        trade_file_path = (
+    if trade_file is None:
+        trade_file = (
             PACK_FOLDER
             / "data"
             / "wandering_trades"
             / "functions"
             / "add_trade.mcfunction"
         )
-    with open(trade_file_path) as trade_file:
+    if isinstance(trade_file, (str, bytes, PathLike)):
+        with open(trade_file) as trade_file:
+            file_lines = trade_file.readlines()
+    else:
         file_lines = trade_file.readlines()
+
+    if isinstance(file_lines[0], bytes):
+        file_lines = [line.decode("utf-8") for line in file_lines]
 
     player_head_trades = []  # type: List[Union[str, Dict[str, str]]]
     for line_num, line in enumerate(file_lines):
