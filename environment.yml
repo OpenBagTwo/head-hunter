@@ -12,5 +12,6 @@ dependencies:
   - jupyterlab>=3
   - jupyterlab_code_formatter
   - pandas>=1.4
+  - pyperclip
   - pip:
     - black-nb
