@@ -1,19 +1,20 @@
 """Utilities for packaging your datapack for use in a world"""
+import os
 import shutil
 from os import PathLike
-from os.path import abspath
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Optional, Union
 
 from . import PACK_FOLDER
 
 
-def make_zip(destination_path: Optional[Union[str, bytes, PathLike]] = None):
+def make_zip(destination_path: Optional[Union[str, PathLike]] = None):
     """Bundle up your pack folder as a datapack zip file
 
     Parameters
     ----------
-    destination_path : path-like, optional
+    destination_path : path, optional
         The file path where you'd like to save the zip file.
         DO NOT include the ".zip" extension.
         If None is specified, the file will be saved as
@@ -35,7 +36,14 @@ def make_zip(destination_path: Optional[Union[str, bytes, PathLike]] = None):
     if destination_path is None:
         destination_path = Path("Head Hunter")
 
-    destination_filebase = str(abspath(destination_path))
-    pack_root = str(abspath(PACK_FOLDER))
+    destination_filebase = os.path.abspath(destination_path)
 
-    shutil.make_archive(destination_filebase, "zip", pack_root)
+    with TemporaryDirectory() as tmpdir:
+        shutil.copytree(
+            PACK_FOLDER,
+            os.path.join(tmpdir, PACK_FOLDER.name),
+            ignore=shutil.ignore_patterns(".*"),
+        )
+        shutil.make_archive(
+            destination_filebase, "zip", os.path.join(tmpdir, PACK_FOLDER.name)
+        )
