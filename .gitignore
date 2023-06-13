@@ -2,6 +2,9 @@
 *.zip
 *.tar.*
 
+# the OG packs aren't for redis
+packs/
+
 # Vanilla Tweaks assets
 Head\ Hunter/
 
