@@ -7,19 +7,24 @@ from typing import Iterable, Mapping, Optional, Tuple, Union
 
 from . import PACK_FOLDER
 
+META_FILES = (
+    "pack.mcmeta",
+    "data/vanillatweaks/advancements/wandering_trades.json",
+)
 
-def write_mcmeta(
-    template_path: Optional[Union[str, bytes, PathLike]] = None,
+
+def write_meta_files(
+    *template_paths: Union[str, PathLike],
     version: Optional[str] = None,
-):
-    """Write a pack.mcmeta, using the template in the templates folder
-    (or one you brought yourself)
+) -> None:
+    """Write a metadata file (or files), using the template in the templates
+    folder (or one(s) you brought yourself)
 
     Parameters
     ----------
-    template_path : path-like, optional
-        The path to a template pack.mcmeta file. If None is provided,
-        the file in the templates folder will be used.
+    template_paths : path-like, optional
+        The paths to template files. If None is provided, the files in the
+        templates folder will be used.
     version : str, optional
         The version to give to the pack. If None is provided, one will
         be generated based on the current date (calver).
@@ -28,26 +33,49 @@ def write_mcmeta(
     -------
     None
 
+    Notes
+    -----
+    The list of supported metadata files is hard-coded in this module as
+    `META_FILES`.
+
     Raises
     ------
+    ValueError
+        If the template file is not recognized (filename should match the file
+        name of the metadata file).
     FileNotFoundError
-        If the specified template file doesn't exist, or if the pack
-        folder doesn't exist (meaning you haven't downloaded the base datapack)
+        If the specified template file doesn't exist
     PermissionError
-        If you don't have the ability to open the template file or write to the pack folder
+        If you don't have the ability to open the template file or write to the
+        pack folder
     """
-    if template_path is None:
-        template_path = Path(__file__).parent / "templates" / "pack.mcmeta"
-
     if version is None:
         version = dt.date.today().strftime("v%Y.%m.%d")
 
-    with open(template_path) as template_file:
-        template = template_file.read()
+    if not template_paths:
+        # TODO: replace this with some proper importlib resources
+        template_paths = (
+            Path(__file__).parent / "templates" / "pack.mcmeta",
+            Path(__file__).parent / "templates" / "wandering_trades.json",
+        )
+
+    for file in template_paths:
+        _write_meta_file(Path(file), version)
+
+
+def _write_meta_file(template_file: Path, version: str) -> None:
+    template = template_file.read_text()
 
     mcmeta = template.replace("VERSION", version)
 
-    with open(PACK_FOLDER / "pack.mcmeta", "w") as pack_file:
+    for file in META_FILES:
+        if file.split("/")[-1] == template_file.name:
+            destination = Path(file)
+            break
+    else:
+        raise ValueError(f"Unrecognized template {template_file.name}")
+
+    with open(PACK_FOLDER / destination, "w") as pack_file:
         pack_file.write(mcmeta)
 
 
