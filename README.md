@@ -18,10 +18,6 @@ You'll also need to grab yourself a copy of the Wandering Trader datapack.
 1. Under "Hermitcraft," select "More Mob Heads" and "Wandering Trades (Hermit Edition)"
 1. Download the zip archive and extract the "UNZIP_ME" parent zip file into the "packs" folder.
 
-You should now have a folder named `Head Hunter` whose top-level contents are:
-* a `data` directory
-* a file named `pack.mcmeta`
-* an icon named `pack.png`
 
 ## Usage
 
@@ -112,3 +108,8 @@ distribution of conda.
 
 For ease of style-guide enforcement, a [pre-commit](https://pre-commit.com/) configuration has been
 provided.
+
+## License
+
+The `head_hunter` package and its contents are licensed under [the GNU Public License v3](LICENSE). Any data packs produced
+by this package must be licensed under [Vanilla Tweaks' terms of use](Head Hunter/LICENSE.txt).
