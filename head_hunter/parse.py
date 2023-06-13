@@ -187,3 +187,29 @@ def _parse_mob_heads(mob_file: IO) -> List[Dict[str, str]]:
             head_specs.append({name: head_spec[1:-1]})
 
     return head_specs
+
+
+def parse_give_command(command: str) -> str:
+    """Parse a /give command (such as you'd find from a skin lookup site) to
+    extract just the relevant specification that needs to go into the head-list
+
+    Parameters
+    ----------
+    command : str
+        The full `/give` command
+
+    Returns
+    -------
+    str
+        the relevant head specification
+
+    Raises
+    ------
+    ValueError
+        If the command could not be parsed
+    """
+
+    match = re.search(r"SkullOwner.*,display:", command.strip())
+    if not match:
+        raise ValueError("Could not parse command")
+    return match.group(0)[: -len(",display:")]
