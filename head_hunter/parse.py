@@ -2,22 +2,23 @@
 import json
 import re
 from os import PathLike
+from pathlib import Path
 from typing import IO, Dict, List, Optional, Union
 
-from . import PACK_FOLDER
+from .extract import file_from_data_pack
 
 
-def parse_trades(
-    trade_file: Optional[Union[str, bytes, PathLike, IO]] = None
+def parse_wandering_trades(
+    trade_path: Optional[Union[str, PathLike]] = None
 ) -> List[Union[str, Dict[str, str]]]:
     """Parse an existing trade list
 
     Parameters
     ----------
-    trade_file_path : path-like or file-like, optional
+    trade_path : path, optional
         The trade list you want to parse. If None is specified,
-        this method will load add_trade.mcfunction from the appropriate spot
-        in the pack folder.
+        this method will look for a "wandering trades" pack in the packs folder
+        and attempt to parse `add_trade.mcfunction`  from there.
 
     Returns
     -------
@@ -47,25 +48,23 @@ def parse_trades(
     -----
     This function is not smart enough to detect if the full spec doesn't actually match the "skull owner"
     """
-    if trade_file is None:
-        trade_file = (
-            PACK_FOLDER
-            / "data"
-            / "wandering_trades"
-            / "functions"
-            / "add_trade.mcfunction"
-        )
-    if isinstance(trade_file, (str, bytes, PathLike)):
-        with open(trade_file) as trade_file:
-            file_lines = trade_file.readlines()
+    if trade_path is None:
+        with file_from_data_pack(
+            "wandering trades hermit edition",
+            Path("data") / "wandering_trades" / "functions" / "add_trade.mcfunction",
+        ) as trade_file:
+            return _parse_wandering_trades(trade_file)
     else:
-        file_lines = trade_file.readlines()
+        with open(trade_path) as trade_file:
+            return _parse_wandering_trades(trade_file)
 
-    if isinstance(file_lines[0], bytes):
-        file_lines = [line.decode("utf-8") for line in file_lines]
 
+def _parse_wandering_trades(trade_file: IO) -> List[Union[str, Dict[str, str]]]:
     player_head_trades = []  # type: List[Union[str, Dict[str, str]]]
-    for line_num, line in enumerate(file_lines):
+    for line_num, line in enumerate(trade_file.readlines()):
+        if isinstance(line, bytes):
+            line = line.decode("utf-8")
+
         # just being prepared for failure
         parse_fail_message = f"Could not parse line {line_num}:\n\n{line}"
 
@@ -102,17 +101,21 @@ def parse_trades(
     return player_head_trades
 
 
-def parse_mob_head_specs(
-    mob_file_path: Union[str, bytes, PathLike]
-) -> List[Dict[str, str]]:
+def parse_mob_heads(mob: Union[str, PathLike]) -> List[Dict[str, str]]:
     """Extract head specs from a "More Mob Heads" datapack loot table.
     For`more mob heads v2.9.4.zip` these loot tables are found at:
     `/data/minecraft/loot_tables/entities/`
 
     Parameters
     ----------
-    mob_file_path: path-like
-        Path to the mob loot table file you'd like to parse.
+    mob: str or path
+        Either the name of the mob whose head (or heads) you're looking
+        to parse (in which case this method will attempt to extract the mob
+        head from a "more mob heads" datapack stored in the "packs" folder)
+
+        _or_
+
+        the path of the particular loot table JSON you're wanting to parse
 
     Returns
     -------
@@ -127,14 +130,36 @@ def parse_mob_head_specs(
     Raises
     ------
     FileNotFoundError
-        If the specified file doesn't exist, or if the pack
-        folder doesn't exist
+        If the specified file doesn't exist or can't be found
     PermissionError
         If you don't have the ability to open the file
     JSONDecodeError
         If the specified file is not valid JSON
     """
-    loot_table = json.load(open(mob_file_path))
+    # first check if it's a file
+    try:
+        with open(mob) as mob_file:
+            return _parse_mob_heads(mob_file)
+    except (FileNotFoundError, PermissionError, json.JSONDecodeError) as oops:
+        # maybe it's a relative path inside a pack?
+        try:
+            with file_from_data_pack("more mob heads", mob) as mob_file:
+                return _parse_mob_heads(mob_file)
+        except (KeyError, json.JSONDecodeError, PermissionError):
+            pass
+        if not isinstance(mob, str):
+            raise oops
+
+    # now check if it's the mob name
+    with file_from_data_pack(
+        "more mob heads",
+        Path("data") / "minecraft" / "loot_tables" / "entities" / f"{mob}.json",
+    ) as mob_file:
+        return _parse_mob_heads(mob_file)
+
+
+def _parse_mob_heads(mob_file: IO) -> List[Dict[str, str]]:
+    loot_table = json.load(mob_file)
     head_drops = []
     for pool in loot_table["pools"]:
         for entry in pool["entries"]:
