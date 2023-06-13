@@ -77,6 +77,10 @@ def _parse_wandering_trades(trade_file: IO) -> List[Union[str, Dict[str, str]]]:
             # not selling a player head, so ignore
             continue
 
+        if 'buyB:{id:"minecraft:air"' not in command:
+            # then it's a mini-block
+            continue
+
         # this is brittle gererally, but depth matching is probably YAGNI
         match = re.search(r"tag:{.*}}}", command)
         if not match:
