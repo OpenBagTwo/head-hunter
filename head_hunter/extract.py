@@ -11,6 +11,7 @@ from typing import IO, Generator, List, Optional, Union
 from zipfile import BadZipFile, ZipFile
 
 from . import PACK_FOLDER
+from .write import patch_tick_function
 
 
 def list_available_packs(
@@ -135,7 +136,8 @@ def file_from_data_pack(
 
 
 def copy_data_from_existing_pack(
-    pack_path: Optional[Union[str, PathLike]] = None
+    pack_path: Optional[Union[str, PathLike]] = None,
+    keep_block_trades: Optional[bool] = False,
 ) -> None:
     """Copy the "data" folder from an existing pack into the default pack folder,
     overwriting any existing data directory
@@ -146,6 +148,14 @@ def copy_data_from_existing_pack(
         The pack to copy from. If None is provided, this method will look
         for a "wandering trades" data pack in the "packs" folder ("hermit edition"
         packs should be given priority).
+    keep_block_trades: bool, optional
+        Since this package completely overwrites the trade list, the mini-block
+        trades that are in the standard pack will be removed, and
+        `provide_block_trades.mcfunction` will break when it tries to load them.
+        Thus, by default, this method *does not* copy `keep_block_trades` and
+        removes any reference to it from `tick.mcfunction`. If you plan on
+        adding back the block trades yourself manually, pass in
+        `keep_block_trades=True`.
 
     Raises
     ------
@@ -167,7 +177,11 @@ def copy_data_from_existing_pack(
             move_back = False
         try:
             if donor_root.is_dir():
-                shutil.copytree(donor_root / "data", PACK_FOLDER / "data")
+                shutil.copytree(
+                    donor_root / "data",
+                    PACK_FOLDER / "data",
+                    ignore=shutil.ignore_patterns("provide_block_trades.mcfunction"),
+                )
             else:
                 zipped = ZipFile(donor_root)
                 zipped.extractall(
@@ -176,8 +190,15 @@ def copy_data_from_existing_pack(
                         file
                         for file in zipped.namelist()
                         if file.startswith(f"data{os.sep}")
+                        and (
+                            not file.endswith("provide_block_trades.mcfunction")
+                            or keep_block_trades
+                        )
                     ],
                 )
+            if not keep_block_trades:
+                patch_tick_function()
+
         except Exception as fail:
             if move_back:
                 shutil.rmtree(PACK_FOLDER / "data", ignore_errors=True)
