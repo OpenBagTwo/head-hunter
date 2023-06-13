@@ -66,7 +66,6 @@ def parse_trades(
 
     player_head_trades = []  # type: List[Union[str, Dict[str, str]]]
     for line_num, line in enumerate(file_lines):
-
         # just being prepared for failure
         parse_fail_message = f"Could not parse line {line_num}:\n\n{line}"
 

@@ -1,17 +1,17 @@
 name: head-hunter
 channels:
-  - conda-forge
+- conda-forge
 dependencies:
-  - python>=3.10
-  - ipython>=8
-  - pip>=22
-  - pre-commit
-  - black
-  - isort
-  - mypy
-  - jupyterlab>=3
-  - jupyterlab_code_formatter
-  - pandas>=1.4
-  - pyperclip
-  - pip:
-    - black-nb
+- python==3.8
+- ipython>=8
+- pip>=22
+- pre-commit
+- black
+- isort
+- mypy
+- jupyterlab>=3
+- jupyterlab_code_formatter
+- pandas>=1.4
+- pyperclip
+- pip:
+  - black-nb
