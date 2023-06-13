@@ -163,7 +163,7 @@ def write_trades(
         if isinstance(head, str):
             head_spec = f"SkullOwner:{head}"
         else:
-            head_spec = list(head.values())[0]
+            head_spec = next(iter(head.values()))
 
         command = command_template.replace(
             "IDX", str(trade_index := trade_index + 1)  # ++trade_index
@@ -242,3 +242,50 @@ def update_trade_count(
         write_me.append("")  # always good to end with a newline
 
     Path(trade_provider_file).write_text("\n".join(write_me))
+
+
+def patch_tick_function(
+    tick_function_path: Optional[Union[str, PathLike]] = None
+) -> None:
+    """Since this package completely overwrites the trade list, the mini-block
+    trades that are in the standard pack will be removed, and
+    `provide_block_trades.mcfunction` will break when it tries to load them.
+    Thus, this method is needed to overwrite `ticks.mcfunction` so that function
+    doesn't get called.
+
+    Parameters
+    ----------
+    tick_function_path, optional
+        The file to update (in case it's in a weird place). If None is provided,
+        this method will look for "tick.mcfunction" within the default pack
+        folder.
+    """
+    if tick_function_path is None:
+        tick_function_path = (
+            PACK_FOLDER / "data" / "wandering_trades" / "functions" / "tick.mcfunction"
+        )
+
+    commands = Path(tick_function_path).read_text().splitlines()
+
+    write_me: List[str] = []
+    for command in commands:
+        if (
+            "!has_new_block_trades" in command
+            or command.strip() == "# Amount of block trades"
+        ):
+            continue
+        if command.strip().endswith(
+            "run function wandering_trades:provide_hermit_trades"
+        ):
+            write_me.append(
+                "execute as"
+                " @e[type=minecraft:wandering_trader,tag=!has_new_hermit_trades]"
+                " at @s run function wandering_trades:provide_hermit_trades"
+            )
+        else:
+            write_me.append(command)
+
+    if write_me[-1] != "":
+        write_me.append("")  # always good to end with a newline
+
+    Path(tick_function_path).write_text("\n".join(write_me))

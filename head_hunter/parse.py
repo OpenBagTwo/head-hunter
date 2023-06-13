@@ -10,7 +10,7 @@ from .extract import file_from_data_pack
 
 def parse_wandering_trades(
     trade_path: Optional[Union[str, PathLike]] = None
-) -> List[Union[str, Dict[str, str]]]:
+) -> List[Dict[str, str]]:
     """Parse an existing trade list
 
     Parameters
@@ -59,8 +59,8 @@ def parse_wandering_trades(
             return _parse_wandering_trades(trade_file)
 
 
-def _parse_wandering_trades(trade_file: IO) -> List[Union[str, Dict[str, str]]]:
-    player_head_trades = []  # type: List[Union[str, Dict[str, str]]]
+def _parse_wandering_trades(trade_file: IO) -> List[Dict[str, str]]:
+    player_head_trades = []  # type: List[Dict[str, str]]
     for line_num, line in enumerate(trade_file.readlines()):
         if isinstance(line, bytes):
             line = line.decode("utf-8")
@@ -89,7 +89,9 @@ def _parse_wandering_trades(trade_file: IO) -> List[Union[str, Dict[str, str]]]:
 
         if re.match(r"^SkullOwner:\w*$", player_head_spec):
             # using simple spec
-            player_head_trades.append(player_head_spec.split(":")[1])
+            player_head_trades.append(
+                {player_head_spec.split(":")[1]: player_head_spec}
+            )
         else:
             match = re.search(r"Name:.*?,", player_head_spec)
             if not match:
@@ -189,7 +191,7 @@ def _parse_mob_heads(mob_file: IO) -> List[Dict[str, str]]:
     return head_specs
 
 
-def parse_give_command(command: str) -> str:
+def parse_give_command(command: str, name: str) -> Dict[str, str]:
     """Parse a /give command (such as you'd find from a skin lookup site) to
     extract just the relevant specification that needs to go into the head-list
 
@@ -197,11 +199,14 @@ def parse_give_command(command: str) -> str:
     ----------
     command : str
         The full `/give` command
+    name : str
+        The name (with any fancy formatting) to give to the head
 
     Returns
     -------
-    str
-        the relevant head specification
+    1-item dict
+        the player-head specifications, in the form
+        {player_name: full_spec}
 
     Raises
     ------
@@ -209,7 +214,7 @@ def parse_give_command(command: str) -> str:
         If the command could not be parsed
     """
 
-    match = re.search(r"SkullOwner.*,display:", command.strip())
+    match = re.search(r"(?:(SkullOwner:.*),display:)", command.strip())
     if not match:
         raise ValueError("Could not parse command")
-    return match.group(0)[: -len(",display:")]
+    return {name: r'display:{Name:"{\"text\":\"' + name + r'\"}"},' + match.group(1)}
