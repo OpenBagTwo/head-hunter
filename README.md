@@ -15,7 +15,7 @@ git clone https://github.com/OpenBagTwo/head-hunter -–depth 1
 
 You'll also need to grab yourself a copies of the Vanilla Tweaks data packs.
 
-1. Go to the Vanilla Tweaks [datapacks page](https://vanillatweaks.net/picker/datapacks/)
+1. Go to the Vanilla Tweaks [data packs page](https://vanillatweaks.net/picker/datapacks/)
 1. Under "Hermitcraft," select "More Mob Heads" and "Wandering Trades (Hermit Edition)"
 1. Download the zip archive and extract the "UNZIP_ME" parent zip file into the "packs" folder.
 
@@ -23,9 +23,9 @@ You'll also need to grab yourself a copies of the Vanilla Tweaks data packs.
 
 This package is compatible with Python 3.8 or newer and consists of four modules:
 
-1. `extract`, which extracts files from existing datapacks
+1. `extract`, which extracts files from existing data packs
 1. `parse`, which parses head configurations from data pack functions and `/give` commands
-1. `write`, which write the various datapack files
+1. `write`, which write the various data pack files
 1. `release`, which bundles everything up into a handy zip file
 
 You can grab information about the methods in each module using the

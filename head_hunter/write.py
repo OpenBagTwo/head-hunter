@@ -1,4 +1,4 @@
-"""Utilities for writing / updating datapack files"""
+"""Utilities for writing / updating data pack files"""
 
 import datetime as dt
 from os import PathLike
@@ -128,7 +128,7 @@ def write_trades(
     ------
     FileNotFoundError
         If the pack folder or functions subdirectory doesn't exist
-        (meaning you haven't downloaded the base datapack or that the file
+        (meaning you haven't downloaded the base data pack or that the file
         structure is corrupted
     PermissionError
         If you don't have the ability to write to the pack folder

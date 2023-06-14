@@ -1,4 +1,4 @@
-"""Utilities for loading a particular file from inside a zipped datapack"""
+"""Utilities for loading a particular file from inside a zipped data pack"""
 import fnmatch
 import os
 import shutil

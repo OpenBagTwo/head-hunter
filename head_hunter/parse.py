@@ -108,7 +108,7 @@ def _parse_wandering_trades(trade_file: IO) -> List[Dict[str, str]]:
 
 
 def parse_mob_heads(mob: Union[str, PathLike]) -> List[Dict[str, str]]:
-    """Extract head specs from a "More Mob Heads" datapack loot table.
+    """Extract head specs from a "More Mob Heads" data pack loot table.
     For`more mob heads v2.9.4.zip` these loot tables are found at:
     `/data/minecraft/loot_tables/entities/`
 
@@ -117,7 +117,7 @@ def parse_mob_heads(mob: Union[str, PathLike]) -> List[Dict[str, str]]:
     mob: str or path
         Either the name of the mob whose head (or heads) you're looking
         to parse (in which case this method will attempt to extract the mob
-        head from a "more mob heads" datapack stored in the "packs" folder)
+        head from a "more mob heads" data pack stored in the "packs" folder)
 
         _or_
 
