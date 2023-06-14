@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="None">
+    <meta name="author" content="Gili "OpenBagTwo" Barlev">
+    
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Head Hunter Documentation</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <link href="assets/_mkdocstrings.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+      <script src="./js/elasticlunr.min.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = (window === window.parent);
+        
+        var pageToc = [
+          {title: "Head Hunter", url: "#_top", children: [
+              {title: "Installation and Setup", url: "#installation-and-setup" },
+              {title: "Usage", url: "#usage" },
+              {title: "Contributing", url: "#contributing" },
+              {title: "License", url: "#license" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="./search.html">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+
+    
+    
+
+    
+    <a href="" class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="./img/logo.png"/>
+      
+      <div class="wm-top-title">
+        Head Hunter Documentation<br>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+  <div id="main-content" class="wm-page-top-frame">
+    
+<nav class="wm-toc-pane">
+  
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev1">
+      <a class="wm-article-link wm-toc-text" href="https://github.com/OpenBagTwo/head-hunter">
+        
+        head-hunter
+      </a>
+      </li>
+    </ul>
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href="" class="wm-article-link wm-toc-text">Home</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="Tutorial/" class="wm-article-link wm-toc-text">Tutorial</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="terms/" class="wm-article-link wm-toc-text">Terms of Use</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">API Docs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><a href="reference/head_hunter/" class="wm-article-link wm-toc-text">head_hunter</a>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/write/" class="wm-article-link wm-toc-text">write</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/parse/" class="wm-article-link wm-toc-text">parse</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/release/" class="wm-article-link wm-toc-text">release</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/extract/" class="wm-article-link wm-toc-text">extract</a>
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+  </ul>
+</nav>
+
+    <div class="wm-content-pane">
+      <iframe class="wm-article" name="article"></iframe>
+    </div>
+  </div>
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="Tutorial/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="Tutorial/" class="btn btn-xs btn-link">
+        Tutorial
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="head-hunter"><a href="https://github.com/OpenBagTwo/head-hunter">Head Hunter</a></h1>
+<p>A package for customizing <a href="https://vanillatweaks.net"><strong>Vanilla Tweaks'</strong></a>
+<a href="https://www.youtube.com/watch?v=L3En7cuOdHY">Wandering Trades data pack</a> to stock
+<a href="https://www.youtube.com/shorts/tbkQ-IXRdbs">everyone's favorite</a> <a href="https://www.youtube.com/watch?v=tVA8eNh7VWs">ex-nitwit</a>
+with your own personalized list of custom player heads.</p>
+<h2 id="installation-and-setup">Installation and Setup</h2>
+<p>To get started, it's recommended that you clone this repo to your computer:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OpenBagTwo/head-hunter<span class="w"> </span>-–depth<span class="w"> </span><span class="m">1</span>
+</span></code></pre></div>
+<p>You'll also need to grab yourself a copies of the Vanilla Tweaks data packs.</p>
+<ol>
+<li>Go to the Vanilla Tweaks <a href="https://vanillatweaks.net/picker/datapacks/">datapacks page</a></li>
+<li>Under "Hermitcraft," select "More Mob Heads" and "Wandering Trades (Hermit Edition)"</li>
+<li>Download the zip archive and extract the "UNZIP_ME" parent zip file into the "packs" folder.</li>
+</ol>
+<h2 id="usage">Usage</h2>
+<p>This package is compatible with Python 3.8 or newer and consists of four modules:</p>
+<ol>
+<li><code>extract</code>, which extracts files from existing datapacks</li>
+<li><code>parse</code>, which parses head configurations from data pack functions and <code>/give</code> commands</li>
+<li><code>write</code>, which write the various datapack files</li>
+<li><code>release</code>, which bundles everything up into a handy zip file</li>
+</ol>
+<p>You can grab information about the methods in each module using the
+<a href="https://docs.python.org/3/library/functions.html#help"><code>help()</code></a>
+function, or you can browse <a href="https://openbagtwo.github.io/head-hunter/reference/head_hunter/">the API documentation online</a>.</p>
+<p>There's also a handy <a href="Tutorial/">end-to-end tutorial</a> that you can even run interactively
+in <a href="https://jupyter.org/">Jupyter</a>.</p>
+<h2 id="contributing">Contributing</h2>
+<p>A development environment is provided in the form of a
+<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html">conda <code>environment.yml</code> file</a>.
+I highly recommend the <a href="https://github.com/conda-forge/miniforge#mambaforge">mambaforge</a>
+distribution of conda.</p>
+<p>For ease of style-guide enforcement, a <a href="https://pre-commit.com/">pre-commit</a> configuration has been
+provided.</p>
+<p>Documentation is automatically built on every push to the <code>main</code> branch. To preview them locally, run <code>mkdocs serve</code>
+from the repo root.</p>
+<h2 id="license">License</h2>
+<p>The <code>head_hunter</code> package and its contents are licensed under <a href="https://github.com/OpenBagTwo/head-hunter/blob/main/LICENSE">the GNU Public License v3</a>. Any data packs produced
+by this package must be licensed under <a href="https://github.com/OpenBagTwo/head-hunter/blob/main/Head%20Hunter/credits.txt">Vanilla Tweaks' terms of use</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="Tutorial/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="Tutorial/" class="btn btn-xs btn-link">
+        Tutorial
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+      <p>
+        <a href="https://github.com/OpenBagTwo/head-hunter">head-hunter</a>
+      </p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>
+<!--
+MkDocs version : 1.4.3
+Build Date UTC : 2023-06-14 15:55:15.593068+00:00
+-->
