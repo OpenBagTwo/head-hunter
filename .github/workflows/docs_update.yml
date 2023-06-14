@@ -1,0 +1,27 @@
+# Rebuild the docs on changes to main
+
+name: Docs Update
+
+on:
+  push:
+    branches:
+    - main
+jobs:
+  docs_rebuild:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: set up development environment
+      run: |
+        $CONDA/bin/conda env create -q -f environment.yml
+        source $CONDA/bin/activate head-hunter
+    - name: configure git
+      run: |
+        git config --global user.name docs-golem
+        git config --global user.email losthemobvote@openbagtwo.net
+    - name: deploy docs
+      run: |
+        source $CONDA/bin/activate head-hunter
+        mkdocs gh-deploy
