@@ -67,20 +67,20 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
   <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
     
     <div class="wm-article-nav pull-right">
-      <a href="../release/" class="btn btn-xs btn-default pull-right">
+      <a href="../write/" class="btn btn-xs btn-default pull-right">
         Next
         <i class="fa fa-chevron-right" aria-hidden="true"></i>
       </a>
-      <a href="../release/" class="btn btn-xs btn-link">
-        release
+      <a href="../write/" class="btn btn-xs btn-link">
+        write
       </a>
     </div>
     
     <div class="wm-article-nav">
-      <a href="../write/" class="btn btn-xs btn-default pull-left">
+      <a href="../release/" class="btn btn-xs btn-default pull-left">
         <i class="fa fa-chevron-left" aria-hidden="true"></i>
-        Previous</a><a href="../write/" class="btn btn-xs btn-link">
-        write
+        Previous</a><a href="../release/" class="btn btn-xs btn-link">
+        release
       </a>
     </div>
     
@@ -283,7 +283,7 @@ extract just the relevant specification that needs to go into the head-list</p>
 
   <div class="doc doc-contents ">
   
-      <p>Extract head specs from a "More Mob Heads" datapack loot table.
+      <p>Extract head specs from a "More Mob Heads" data pack loot table.
 For<code>more mob heads v2.9.4.zip</code> these loot tables are found at:
 <code>/data/minecraft/loot_tables/entities/</code></p>
 
@@ -307,7 +307,7 @@ For<code>more mob heads v2.9.4.zip</code> these loot tables are found at:
             <div class="doc-md-description">
               <p>Either the name of the mob whose head (or heads) you're looking
 to parse (in which case this method will attempt to extract the mob
-head from a "more mob heads" datapack stored in the "packs" folder)</p>
+head from a "more mob heads" data pack stored in the "packs" folder)</p>
 <p><em>or</em></p>
 <p>the path of the particular loot table JSON you're wanting to parse</p>
             </div>
@@ -444,7 +444,7 @@ would give you that head</p>
 <span class="normal"><a href="#__codelineno-0-162">162</a></span>
 <span class="normal"><a href="#__codelineno-0-163">163</a></span>
 <span class="normal"><a href="#__codelineno-0-164">164</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="k">def</span> <span class="nf">parse_mob_heads</span><span class="p">(</span><span class="n">mob</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PathLike</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract head specs from a &quot;More Mob Heads&quot; datapack loot table.</span>
+</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract head specs from a &quot;More Mob Heads&quot; data pack loot table.</span>
 </span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">    For`more mob heads v2.9.4.zip` these loot tables are found at:</span>
 </span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="sd">    `/data/minecraft/loot_tables/entities/`</span>
 </span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114"></a>
@@ -453,7 +453,7 @@ would give you that head</p>
 </span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="sd">    mob: str or path</span>
 </span><span id="__span-0-118"><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">        Either the name of the mob whose head (or heads) you&#39;re looking</span>
 </span><span id="__span-0-119"><a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="sd">        to parse (in which case this method will attempt to extract the mob</span>
-</span><span id="__span-0-120"><a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">        head from a &quot;more mob heads&quot; datapack stored in the &quot;packs&quot; folder)</span>
+</span><span id="__span-0-120"><a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">        head from a &quot;more mob heads&quot; data pack stored in the &quot;packs&quot; folder)</span>
 </span><span id="__span-0-121"><a id="__codelineno-0-121" name="__codelineno-0-121"></a>
 </span><span id="__span-0-122"><a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">        _or_</span>
 </span><span id="__span-0-123"><a id="__codelineno-0-123" name="__codelineno-0-123"></a>
@@ -746,20 +746,20 @@ would give you that head</p>
   <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
     
     <div class="wm-article-nav pull-right">
-      <a href="../release/" class="btn btn-xs btn-default pull-right">
+      <a href="../write/" class="btn btn-xs btn-default pull-right">
         Next
         <i class="fa fa-chevron-right" aria-hidden="true"></i>
       </a>
-      <a href="../release/" class="btn btn-xs btn-link">
-        release
+      <a href="../write/" class="btn btn-xs btn-link">
+        write
       </a>
     </div>
     
     <div class="wm-article-nav">
-      <a href="../write/" class="btn btn-xs btn-default pull-left">
+      <a href="../release/" class="btn btn-xs btn-default pull-left">
         <i class="fa fa-chevron-left" aria-hidden="true"></i>
-        Previous</a><a href="../write/" class="btn btn-xs btn-link">
-        write
+        Previous</a><a href="../release/" class="btn btn-xs btn-link">
+        release
       </a>
     </div>
     
