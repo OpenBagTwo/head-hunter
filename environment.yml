@@ -11,7 +11,13 @@ dependencies:
 - mypy
 - jupyterlab>=3
 - jupyterlab_code_formatter
-- pandas>=1.4
 - pyperclip
+- mkdocs
+- mkdocstrings
+- mkdocstrings-python
+- mkdocs-literate-nav
+- mkdocs-gen-files
+- mkdocs-jupyter
 - pip:
-  - black-nb
+  - mkdocs-windmill
+  - mkdocs-section-index

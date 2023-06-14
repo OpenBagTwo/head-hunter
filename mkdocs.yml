@@ -1,0 +1,48 @@
+site_name: Head Hunter Documentation
+repo_url: https://github.com/OpenBagTwo/head-hunter
+repo_name: head-hunter
+site_author: Gili "OpenBagTwo" Barlev
+docs_dir: docs
+edit_uri: ''
+theme:
+  name: windmill
+  favicon: img/favicon.png
+  logo: img/logo.png
+extra:
+  logo: img/logo.png
+nav:
+- Home: index.md
+- Tutorial: Tutorial.ipynb
+- Terms of Use: terms.md
+- API Docs: reference/
+plugins:
+- search
+- autorefs
+- mkdocs-jupyter:
+    ignore_h1_titles: true
+    ignore: [.ipynb_checkpoints, '*.py']
+- gen-files:
+    scripts:
+    - docs/gen_apidocs.py
+- section-index
+- literate-nav:
+    nav_file: SUMMARY.md
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          docstring_style: numpy
+          enable_inventory: true
+watch:
+- head_hunter
+markdown_extensions:
+- pymdownx.highlight:
+    anchor_linenums: true
+    line_spans: __span
+    pygments_lang_class: true
+- pymdownx.inlinehilite
+- pymdownx.snippets
+- pymdownx.superfences
+- admonition
+- pymdownx.details
+- sane_lists

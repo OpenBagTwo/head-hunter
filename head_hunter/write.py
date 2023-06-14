@@ -255,7 +255,7 @@ def patch_tick_function(
 
     Parameters
     ----------
-    tick_function_path, optional
+    tick_function_path : path, optional
         The file to update (in case it's in a weird place). If None is provided,
         this method will look for "tick.mcfunction" within the default pack
         folder.
