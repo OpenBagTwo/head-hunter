@@ -85,13 +85,18 @@ def _parse_wandering_trades(trade_file: IO) -> List[HeadSpec]:
 
         match = re.search(r"Name:.*?,", player_head_spec)
         if not match:
+            # try legacy spec
+            if re.match(r"^SkullOwner:\w*$", player_head_spec):
+                player_name = player_head_spec.split(":")[1]
+                player_head_trades.append(HeadSpec.from_username(player_name))
+                continue
             raise RuntimeError(parse_fail_message)
         player_name = match.group(0)[5:-1]
         skull_spec = player_head_spec[match.span()[1] :]
 
-        match = re.search(r'\\"text\\":.*}"', player_name)
+        match = re.search(r'(?:\\"text\\":(?:\\"|)(.*?)(?:\\"|)}")', player_name)
         if match:
-            player_name = match.group(0)[9:-2]
+            player_name = match.group(1)
 
         player_head_trades.append(HeadSpec(player_name, skull_spec))
 
@@ -168,12 +173,12 @@ def _parse_mob_heads(mob_file: IO) -> List[HeadSpec]:
     for drop in head_drops:
         for head_function in drop["functions"]:
             head_spec = head_function["tag"]
-            match = re.search(r'Name:".*?"', head_spec)
+            match = re.search(r'(?:Name:"(.*?)")', head_spec)
             if not match:
                 parse_fail_message = f"Could not parse:\n {drop}"
                 raise RuntimeError(parse_fail_message)
             else:
-                name = match.group(0)[6:-1]
+                name = match.group(1)
             head_specs.append(HeadSpec(name, head_spec[1:-1]))
 
     return head_specs

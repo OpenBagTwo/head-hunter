@@ -50,7 +50,7 @@ class HeadSpec(NamedTuple):
         HeadSpec
             The corresponding head spec
         """
-        return cls(name, name)
+        return cls(name, f"SkullOwner:{name}")
 
     def __str__(self):
         return self.spec
