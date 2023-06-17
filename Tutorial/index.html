@@ -1363,12 +1363,10 @@ Extract the combined zip file (&quot;VanillaTweaks_dXXXXXX_UNZIP_ME.zip&quot;) i
                 </clipboard-copy>
             </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">head</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">hermit_heads</span><span class="p">):</span>
-    <span class="n">hermit</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hermit</span><span class="si">}</span><span class="s2">&#39;s head is at index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
 <div id="cell-5" class="clipboard-copy-txt">for idx, head in enumerate(hermit_heads):
-    hermit = list(head.keys())[0]
-    print(f"{hermit}'s head is at index {idx}")</div>
+    print(idx, repr(head))</div>
         
         </div>
     </div>
@@ -1388,35 +1386,35 @@ Extract the combined zip file (&quot;VanillaTweaks_dXXXXXX_UNZIP_ME.zip&quot;) i
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>PythonGB&#39;s head is at index 0
-Xisuma&#39;s head is at index 1
-Docm77&#39;s head is at index 2
-Jessassin&#39;s head is at index 3
-xBCrafted&#39;s head is at index 4
-Etho&#39;s head is at index 5
-Mumbo&#39;s head is at index 6
-iJevin&#39;s head is at index 7
-impulseSV&#39;s head is at index 8
-Renthedog&#39;s head is at index 9
-Tinfoilchef&#39;s head is at index 10
-Biffa2001&#39;s head is at index 11
-Stressmonster101&#39;s head is at index 12
-GoodTimesWithScar&#39;s head is at index 13
-Zedaph&#39;s head is at index 14
-joehillssays&#39;s head is at index 15
-cubfan135&#39;s head is at index 16
-Welsknight&#39;s head is at index 17
-Keralis&#39;s head is at index 18
-falsesymmetry&#39;s head is at index 19
-hypnotizd&#39;s head is at index 20
-VintageBeef&#39;s head is at index 21
-BdoubleO100&#39;s head is at index 22
-Tango&#39;s head is at index 23
-Grian&#39;s head is at index 24
-iskall85&#39;s head is at index 25
-ZombieCleo&#39;s head is at index 26
-GeminiTay&#39;s head is at index 27
-PearlescentMoon&#39;s head is at index 28
+<pre>0 HeadSpec(PythonGB)
+1 HeadSpec(Xisuma)
+2 HeadSpec(Docm77)
+3 HeadSpec(Jessassin)
+4 HeadSpec(xBCrafted)
+5 HeadSpec(Etho)
+6 HeadSpec(Mumbo)
+7 HeadSpec(iJevin)
+8 HeadSpec(impulseSV)
+9 HeadSpec(Renthedog)
+10 HeadSpec(Tinfoilchef)
+11 HeadSpec(Biffa2001)
+12 HeadSpec(Stressmonster101)
+13 HeadSpec(GoodTimesWithScar)
+14 HeadSpec(Zedaph)
+15 HeadSpec(joehillssays)
+16 HeadSpec(cubfan135)
+17 HeadSpec(Welsknight)
+18 HeadSpec(Keralis)
+19 HeadSpec(falsesymmetry)
+20 HeadSpec(hypnotizd)
+21 HeadSpec(VintageBeef)
+22 HeadSpec(BdoubleO100)
+23 HeadSpec(Tango)
+24 HeadSpec(Grian)
+25 HeadSpec(iskall85)
+26 HeadSpec(ZombieCleo)
+27 HeadSpec(GeminiTay)
+28 HeadSpec(PearlescentMoon)
 </pre>
 </div>
 </div>
@@ -1463,15 +1461,13 @@ PearlescentMoon&#39;s head is at index 28
 <span class="n">my_hermits</span> <span class="o">=</span> <span class="p">[</span><span class="n">hermit_heads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">21</span><span class="p">)]</span>
 
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">head</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">my_hermits</span><span class="p">):</span>
-    <span class="n">hermit</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hermit</span><span class="si">}</span><span class="s2">&#39;s head is at index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
 <div id="cell-6" class="clipboard-copy-txt"># this is a demo and not a reflection of my feelings about any hermit
 my_hermits = [hermit_heads[i] for i in (1, 2, 3, 5, 8, 13, 21)]
 
 for idx, head in enumerate(my_hermits):
-    hermit = list(head.keys())[0]
-    print(f"{hermit}'s head is at index {idx}")</div>
+    print(idx, repr(head))</div>
         
         </div>
     </div>
@@ -1491,13 +1487,13 @@ for idx, head in enumerate(my_hermits):
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Xisuma&#39;s head is at index 0
-Docm77&#39;s head is at index 1
-Jessassin&#39;s head is at index 2
-Etho&#39;s head is at index 3
-impulseSV&#39;s head is at index 4
-GoodTimesWithScar&#39;s head is at index 5
-VintageBeef&#39;s head is at index 6
+<pre>0 HeadSpec(Xisuma)
+1 HeadSpec(Docm77)
+2 HeadSpec(Jessassin)
+3 HeadSpec(Etho)
+4 HeadSpec(impulseSV)
+5 HeadSpec(GoodTimesWithScar)
+6 HeadSpec(VintageBeef)
 </pre>
 </div>
 </div>
@@ -1545,16 +1541,14 @@ VintageBeef&#39;s head is at index 6
     <span class="n">mob_heads</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">parse</span><span class="o">.</span><span class="n">parse_mob_heads</span><span class="p">(</span><span class="n">mob</span><span class="p">))</span>
 
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">head</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mob_heads</span><span class="p">):</span>
-    <span class="n">mob</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mob</span><span class="si">}</span><span class="s2">&#39;s head is at index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
 <div id="cell-7" class="clipboard-copy-txt">mob_heads = []
 for mob in ("bee", "cat", "fox", "panda", "sniffer", "silverfish"):
     mob_heads.extend(parse.parse_mob_heads(mob))
 
 for idx, head in enumerate(mob_heads):
-    mob = list(head.keys())[0]
-    print(f"{mob}'s head is at index {idx}")</div>
+    print(idx, repr(head))</div>
         
         </div>
     </div>
@@ -1574,32 +1568,32 @@ for idx, head in enumerate(mob_heads):
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Bee&#39;s head is at index 0
-Pollinated Bee&#39;s head is at index 1
-Angry Bee&#39;s head is at index 2
-Angry Pollinated Bee&#39;s head is at index 3
-Tabby Cat&#39;s head is at index 4
-Tuxedo Cat&#39;s head is at index 5
-Ginger Cat&#39;s head is at index 6
-Siamese Cat&#39;s head is at index 7
-British Shorthair Cat&#39;s head is at index 8
-Calico Cat&#39;s head is at index 9
-Persian Cat&#39;s head is at index 10
-Ragdoll Cat&#39;s head is at index 11
-White Cat&#39;s head is at index 12
-Jellie Cat&#39;s head is at index 13
-Black Cat&#39;s head is at index 14
-Fox&#39;s head is at index 15
-Snow Fox&#39;s head is at index 16
-Aggressive Panda&#39;s head is at index 17
-Lazy Panda&#39;s head is at index 18
-Playful Panda&#39;s head is at index 19
-Worried Panda&#39;s head is at index 20
-Brown Panda&#39;s head is at index 21
-Weak Panda&#39;s head is at index 22
-Panda&#39;s head is at index 23
-Sniffer&#39;s head is at index 24
-Silverfish&#39;s head is at index 25
+<pre>0 HeadSpec(Bee)
+1 HeadSpec(Pollinated Bee)
+2 HeadSpec(Angry Bee)
+3 HeadSpec(Angry Pollinated Bee)
+4 HeadSpec(Tabby Cat)
+5 HeadSpec(Tuxedo Cat)
+6 HeadSpec(Ginger Cat)
+7 HeadSpec(Siamese Cat)
+8 HeadSpec(British Shorthair Cat)
+9 HeadSpec(Calico Cat)
+10 HeadSpec(Persian Cat)
+11 HeadSpec(Ragdoll Cat)
+12 HeadSpec(White Cat)
+13 HeadSpec(Jellie Cat)
+14 HeadSpec(Black Cat)
+15 HeadSpec(Fox)
+16 HeadSpec(Snow Fox)
+17 HeadSpec(Aggressive Panda)
+18 HeadSpec(Lazy Panda)
+19 HeadSpec(Playful Panda)
+20 HeadSpec(Worried Panda)
+21 HeadSpec(Brown Panda)
+22 HeadSpec(Weak Panda)
+23 HeadSpec(Panda)
+24 HeadSpec(Sniffer)
+25 HeadSpec(Silverfish)
 </pre>
 </div>
 </div>
@@ -1644,13 +1638,11 @@ Silverfish&#39;s head is at index 25
             </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">my_mob_heads</span> <span class="o">=</span> <span class="p">[</span><span class="n">mob_heads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">)]</span>
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">head</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">my_mob_heads</span><span class="p">):</span>
-    <span class="n">mob</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mob</span><span class="si">}</span><span class="s2">&#39;s head is at index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
 <div id="cell-8" class="clipboard-copy-txt">my_mob_heads = [mob_heads[i] for i in (0, 4, 13, 14, 15, 16, 19, 24, 25)]
 for idx, head in enumerate(my_mob_heads):
-    mob = list(head.keys())[0]
-    print(f"{mob}'s head is at index {idx}")</div>
+    print(idx, repr(head))</div>
         
         </div>
     </div>
@@ -1670,15 +1662,15 @@ for idx, head in enumerate(my_mob_heads):
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Bee&#39;s head is at index 0
-Tabby Cat&#39;s head is at index 1
-Jellie Cat&#39;s head is at index 2
-Black Cat&#39;s head is at index 3
-Fox&#39;s head is at index 4
-Snow Fox&#39;s head is at index 5
-Playful Panda&#39;s head is at index 6
-Sniffer&#39;s head is at index 7
-Silverfish&#39;s head is at index 8
+<pre>0 HeadSpec(Bee)
+1 HeadSpec(Tabby Cat)
+2 HeadSpec(Jellie Cat)
+3 HeadSpec(Black Cat)
+4 HeadSpec(Fox)
+5 HeadSpec(Snow Fox)
+6 HeadSpec(Playful Panda)
+7 HeadSpec(Sniffer)
+8 HeadSpec(Silverfish)
 </pre>
 </div>
 </div>
@@ -1706,7 +1698,7 @@ you can add their heads to the list:</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div id="cell-id=3a81ec52-b48f-441a-bd85-fa615f6e3b5c" class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div id="cell-id=b267a9ab-9a17-432f-ba75-06b65ac32e22" class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1726,11 +1718,43 @@ you can add their heads to the list:</p>
                     </div>
                 </clipboard-copy>
             </div>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="kn">from</span> <span class="nn">head_hunter</span> <span class="kn">import</span> <span class="n">HeadSpec</span>
+</pre></div>
+<div id="cell-9" class="clipboard-copy-txt">from head_hunter import HeadSpec</div>
+        
+        </div>
+    </div>
+
+</div>
+</div>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div id="cell-id=3a81ec52-b48f-441a-bd85-fa615f6e3b5c" class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+            <div class="zeroclipboard-container">
+                <clipboard-copy for="cell-10">
+                <div>
+                    <span class="notice" hidden>Copied!</span>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                    </svg>
+                    </div>
+                </clipboard-copy>
+            </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">my_player_heads</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;C418&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gnembon&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;kingbdogz&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ilmango&quot;</span><span class="p">,</span>
+    <span class="n">HeadSpec</span><span class="o">.</span><span class="n">from_username</span><span class="p">(</span><span class="s2">&quot;C418&quot;</span><span class="p">),</span>
+    <span class="n">HeadSpec</span><span class="o">.</span><span class="n">from_username</span><span class="p">(</span><span class="s2">&quot;gnembon&quot;</span><span class="p">),</span>
+    <span class="n">HeadSpec</span><span class="o">.</span><span class="n">from_username</span><span class="p">(</span><span class="s2">&quot;kingbdogz&quot;</span><span class="p">),</span>
+    <span class="n">HeadSpec</span><span class="o">.</span><span class="n">from_username</span><span class="p">(</span><span class="s2">&quot;ilmango&quot;</span><span class="p">),</span>
     <span class="n">parse</span><span class="o">.</span><span class="n">parse_give_command</span><span class="p">(</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">/give @p minecraft:player_head{SkullOwner:{Id:[I;2038333874,-420717031,-1789577846,1638088555],Properties:{textures:[{Value:&quot;e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjdiZTgwMDA3YTRlNjEyYzE3MjJkZGI0NmU1Y2RmMGNmMjhiYmRhMmJhNDI2ZDBhMGY0NDlmYjE1Yjg0ZmJhYyJ9fX0=&quot;}]}},display:{Lore:[&quot;{\&quot;text\&quot;:\&quot;https://namemc.com/skin/11eb3ffbb1fc4889\&quot;}&quot;]}}&quot;</span>
@@ -1745,11 +1769,11 @@ you can add their heads to the list:</p>
     <span class="p">),</span>
 <span class="p">]</span>
 </pre></div>
-<div id="cell-9" class="clipboard-copy-txt">my_player_heads = [
-    "C418",
-    "gnembon",
-    "kingbdogz",
-    "ilmango",
+<div id="cell-10" class="clipboard-copy-txt">my_player_heads = [
+    HeadSpec.from_username("C418"),
+    HeadSpec.from_username("gnembon"),
+    HeadSpec.from_username("kingbdogz"),
+    HeadSpec.from_username("ilmango"),
     parse.parse_give_command(
         """
 /give @p minecraft:player_head{SkullOwner:{Id:[I;2038333874,-420717031,-1789577846,1638088555],Properties:{textures:[{Value:"e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjdiZTgwMDA3YTRlNjEyYzE3MjJkZGI0NmU1Y2RmMGNmMjhiYmRhMmJhNDI2ZDBhMGY0NDlmYjE1Yjg0ZmJhYyJ9fX0="}]}},display:{Lore:["{\"text\":\"https://namemc.com/skin/11eb3ffbb1fc4889\"}"]}}"
@@ -1789,12 +1813,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-10">
+                <clipboard-copy for="cell-11">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1806,7 +1830,7 @@ you can add their heads to the list:</p>
             </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="kn">from</span> <span class="nn">head_hunter</span> <span class="kn">import</span> <span class="n">write</span>
 </pre></div>
-<div id="cell-10" class="clipboard-copy-txt">from head_hunter import write</div>
+<div id="cell-11" class="clipboard-copy-txt">from head_hunter import write</div>
         
         </div>
     </div>
@@ -1833,12 +1857,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-11">
+                <clipboard-copy for="cell-12">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1850,7 +1874,7 @@ you can add their heads to the list:</p>
             </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">write</span><span class="o">.</span><span class="n">write_trades</span><span class="p">(</span><span class="n">my_hermits</span> <span class="o">+</span> <span class="n">my_mob_heads</span> <span class="o">+</span> <span class="n">my_player_heads</span><span class="p">)</span>
 </pre></div>
-<div id="cell-11" class="clipboard-copy-txt">write.write_trades(my_hermits + my_mob_heads + my_player_heads)</div>
+<div id="cell-12" class="clipboard-copy-txt">write.write_trades(my_hermits + my_mob_heads + my_player_heads)</div>
         
         </div>
     </div>
@@ -1866,7 +1890,7 @@ you can add their heads to the list:</p>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
 
 
 
@@ -1900,12 +1924,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-12">
+                <clipboard-copy for="cell-13">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1917,7 +1941,7 @@ you can add their heads to the list:</p>
             </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">write</span><span class="o">.</span><span class="n">update_trade_count</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">)</span>  <span class="c1"># a little sugar</span>
 </pre></div>
-<div id="cell-12" class="clipboard-copy-txt">write.update_trade_count(*_)  # a little sugar</div>
+<div id="cell-13" class="clipboard-copy-txt">write.update_trade_count(*_)  # a little sugar</div>
         
         </div>
     </div>
@@ -1944,12 +1968,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-13">
+                <clipboard-copy for="cell-14">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1964,16 +1988,14 @@ you can add their heads to the list:</p>
         <span class="s2">&quot;Head Hunter/data/wandering_trades/functions/add_trade.mcfunction&quot;</span>
     <span class="p">)</span>
 <span class="p">):</span>
-    <span class="n">owner</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">owner</span><span class="si">}</span><span class="s2">&#39;s head is at index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
-<div id="cell-13" class="clipboard-copy-txt">for idx, head in enumerate(
+<div id="cell-14" class="clipboard-copy-txt">for idx, head in enumerate(
     parse.parse_wandering_trades(
         "Head Hunter/data/wandering_trades/functions/add_trade.mcfunction"
     )
 ):
-    owner = list(head.keys())[0]
-    print(f"{owner}'s head is at index {idx}")</div>
+    print(idx, repr(head))</div>
         
         </div>
     </div>
@@ -1993,28 +2015,28 @@ you can add their heads to the list:</p>
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Xisuma&#39;s head is at index 0
-Docm77&#39;s head is at index 1
-Jessassin&#39;s head is at index 2
-Etho&#39;s head is at index 3
-impulseSV&#39;s head is at index 4
-GoodTimesWithScar&#39;s head is at index 5
-VintageBeef&#39;s head is at index 6
-Bee&#39;s head is at index 7
-Tabby Cat&#39;s head is at index 8
-Jellie Cat&#39;s head is at index 9
-Black Cat&#39;s head is at index 10
-Fox&#39;s head is at index 11
-Snow Fox&#39;s head is at index 12
-Playful Panda&#39;s head is at index 13
-Sniffer&#39;s head is at index 14
-Silverfish&#39;s head is at index 15
-C418&#39;s head is at index 16
-gnembon&#39;s head is at index 17
-kingbdogz&#39;s head is at index 18
-ilmango&#39;s head is at index 19
-OpenBagTwo&#39;s head is at index 20
-Phenix&#39;s head is at index 21
+<pre>0 HeadSpec(Xisuma)
+1 HeadSpec(Docm77)
+2 HeadSpec(Jessassin)
+3 HeadSpec(Etho)
+4 HeadSpec(impulseSV)
+5 HeadSpec(GoodTimesWithScar)
+6 HeadSpec(VintageBeef)
+7 HeadSpec(Bee)
+8 HeadSpec(Tabby Cat)
+9 HeadSpec(Jellie Cat)
+10 HeadSpec(Black Cat)
+11 HeadSpec(Fox)
+12 HeadSpec(Snow Fox)
+13 HeadSpec(Playful Panda)
+14 HeadSpec(Sniffer)
+15 HeadSpec(Silverfish)
+16 HeadSpec(C418)
+17 HeadSpec(gnembon)
+18 HeadSpec(kingbdogz)
+19 HeadSpec(ilmango)
+20 HeadSpec(OpenBagTwo)
+21 HeadSpec(Phenix)
 </pre>
 </div>
 </div>
@@ -2053,12 +2075,12 @@ Phenix&#39;s head is at index 21
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-14">
+                <clipboard-copy for="cell-15">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -2070,7 +2092,7 @@ Phenix&#39;s head is at index 21
             </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">write</span><span class="o">.</span><span class="n">write_meta_files</span><span class="p">()</span>
 </pre></div>
-<div id="cell-14" class="clipboard-copy-txt">write.write_meta_files()</div>
+<div id="cell-15" class="clipboard-copy-txt">write.write_meta_files()</div>
         
         </div>
     </div>
@@ -2098,38 +2120,6 @@ Phenix&#39;s head is at index 21
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-            <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-15">
-                <div>
-                    <span class="notice" hidden>Copied!</span>
-                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                    </svg>
-                    </div>
-                </clipboard-copy>
-            </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="kn">from</span> <span class="nn">head_hunter</span> <span class="kn">import</span> <span class="n">release</span>
-</pre></div>
-<div id="cell-15" class="clipboard-copy-txt">from head_hunter import release</div>
-        
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div id="cell-id=2a29e33f-34c0-4dcf-a774-0b0b27961656" class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
@@ -2145,9 +2135,41 @@ Phenix&#39;s head is at index 21
                     </div>
                 </clipboard-copy>
             </div>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="kn">from</span> <span class="nn">head_hunter</span> <span class="kn">import</span> <span class="n">release</span>
+</pre></div>
+<div id="cell-16" class="clipboard-copy-txt">from head_hunter import release</div>
+        
+        </div>
+    </div>
+
+</div>
+</div>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div id="cell-id=2a29e33f-34c0-4dcf-a774-0b0b27961656" class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+            <div class="zeroclipboard-container">
+                <clipboard-copy for="cell-17">
+                <div>
+                    <span class="notice" hidden>Copied!</span>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                    </svg>
+                    </div>
+                </clipboard-copy>
+            </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">release</span><span class="o">.</span><span class="n">make_zip</span><span class="p">()</span>
 </pre></div>
-<div id="cell-16" class="clipboard-copy-txt">release.make_zip()</div>
+<div id="cell-17" class="clipboard-copy-txt">release.make_zip()</div>
         
         </div>
     </div>
@@ -2167,38 +2189,6 @@ Phenix&#39;s head is at index 21
 
 </div>
 </div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div id="cell-id=624e2d6c-32f9-456b-8325-b963fc974782" class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-            <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-17">
-                <div>
-                    <span class="notice" hidden>Copied!</span>
-                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                    </svg>
-                    </div>
-                </clipboard-copy>
-            </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span>
-</pre></div>
-<div id="cell-17" class="clipboard-copy-txt"></div>
-        
-        </div>
-    </div>
-
-</div>
-</div>
-
 </div>
 </div>
 </div>
