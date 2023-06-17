@@ -3,9 +3,9 @@
 import datetime as dt
 from os import PathLike
 from pathlib import Path
-from typing import Iterable, List, Mapping, Optional, Tuple, Union
+from typing import Iterable, List, Optional, Tuple, Union
 
-from . import PACK_FOLDER
+from . import PACK_FOLDER, HeadSpec
 
 META_FILES = (
     "pack.mcmeta",
@@ -82,7 +82,7 @@ def _write_meta_file(template_file: Path, version: str) -> None:
 
 
 def write_trades(
-    trades: Iterable[Union[str, Mapping[str, str]]],
+    trades: Iterable[HeadSpec],
     price: Optional[Tuple[str, int]] = None,
     purchase_limit: int = 3,
     xp_bonus: int = 0,
@@ -160,14 +160,9 @@ def write_trades(
     trade_index = START_AT - 1
 
     for i, head in enumerate(trades):
-        if isinstance(head, str):
-            head_spec = f"SkullOwner:{head}"
-        else:
-            head_spec = next(iter(head.values()))
-
         command = command_template.replace(
             "IDX", str(trade_index := trade_index + 1)  # ++trade_index
-        ).replace("HEAD_SPEC", head_spec)
+        ).replace("HEAD_SPEC", head.spec)
         commands.append(command)
 
     trade_file_path = (

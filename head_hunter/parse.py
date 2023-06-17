@@ -5,12 +5,13 @@ from os import PathLike
 from pathlib import Path
 from typing import IO, Dict, List, Optional, Union
 
+from . import HeadSpec
 from .extract import file_from_data_pack
 
 
 def parse_wandering_trades(
     trade_path: Optional[Union[str, PathLike]] = None
-) -> List[Dict[str, str]]:
+) -> List[HeadSpec]:
     """Parse an existing trade list
 
     Parameters
@@ -22,18 +23,12 @@ def parse_wandering_trades(
 
     Returns
     -------
-    list of dicts and strings
-        list of player-head specifications, either in the form of player names,
-        such that calling
+    list of NamedTuples
+        list of player-head specifications such that calling
         ```
-        /give @s minecraft:player_head{SkullOwner:player_name}
+        /give @s minecraft:player_head{head.spec}
         ```
-        would give you the specified head, or single-item dicts
-        {player_name: full_spec} such that calling
-        ```
-        /give @s minecraft:player_head{full_spec}
-        ```
-        would give you that head
+        would give you the specified head
 
     Raises
     ------
@@ -46,7 +41,8 @@ def parse_wandering_trades(
 
     Notes
     -----
-    This function is not smart enough to detect if the full spec doesn't actually match the "skull owner"
+    This function is not smart enough to detect if the full spec doesn't
+    actually match the "skull owner"
     """
     if trade_path is None:
         with file_from_data_pack(
@@ -59,8 +55,8 @@ def parse_wandering_trades(
             return _parse_wandering_trades(trade_file)
 
 
-def _parse_wandering_trades(trade_file: IO) -> List[Dict[str, str]]:
-    player_head_trades = []  # type: List[Dict[str, str]]
+def _parse_wandering_trades(trade_file: IO) -> List[HeadSpec]:
+    player_head_trades: List[HeadSpec] = []
     for line_num, line in enumerate(trade_file.readlines()):
         if isinstance(line, bytes):
             line = line.decode("utf-8")
@@ -81,36 +77,29 @@ def _parse_wandering_trades(trade_file: IO) -> List[Dict[str, str]]:
             # then it's a mini-block
             continue
 
-        # this is brittle gererally, but depth matching is probably YAGNI
+        # this is brittle generally, but depth matching is probably YAGNI
         match = re.search(r"tag:{.*}}}", command)
         if not match:
             raise RuntimeError(parse_fail_message)
         player_head_spec = match.group(0)[5:-3]
 
-        if re.match(r"^SkullOwner:\w*$", player_head_spec):
-            # using simple spec
-            player_head_trades.append(
-                {player_head_spec.split(":")[1]: player_head_spec}
-            )
-        else:
-            match = re.search(r"Name:.*?,", player_head_spec)
-            if not match:
-                raise RuntimeError(parse_fail_message)
-            player_name = match.group(0)[5:-1]
+        match = re.search(r"Name:.*?,", player_head_spec)
+        if not match:
+            raise RuntimeError(parse_fail_message)
+        player_name = match.group(0)[5:-1]
+        skull_spec = player_head_spec[match.span()[1] :]
 
-            match = re.search(r'\\"text\\":.*}"', player_name)
-            if match:
-                player_name = match.group(0)[9:-2]
+        match = re.search(r'\\"text\\":.*}"', player_name)
+        if match:
+            player_name = match.group(0)[9:-2]
 
-            player_name = re.sub(r'\\?"|\xA7.|}', "", player_name)
-            player_head_trades.append({player_name: player_head_spec})
+        player_head_trades.append(HeadSpec(player_name, skull_spec))
+
     return player_head_trades
 
 
-def parse_mob_heads(mob: Union[str, PathLike]) -> List[Dict[str, str]]:
+def parse_mob_heads(mob: Union[str, PathLike]) -> List[HeadSpec]:
     """Extract head specs from a "More Mob Heads" data pack loot table.
-    For`more mob heads v2.9.4.zip` these loot tables are found at:
-    `/data/minecraft/loot_tables/entities/`
 
     Parameters
     ----------
@@ -125,13 +114,12 @@ def parse_mob_heads(mob: Union[str, PathLike]) -> List[Dict[str, str]]:
 
     Returns
     -------
-    List of 1-item dicts
-        list of player-head specifications, in the form
-        {mob_name: full_spec} such that calling
+    List of NamedTuples
+        list of player-head specifications such that calling
         ```
-        /give @s minecraft:player_head{full_spec}
+        /give @s minecraft:player_head{head.spec}
         ```
-        would give you that head
+        would give you the specified head
 
     Raises
     ------
@@ -164,9 +152,9 @@ def parse_mob_heads(mob: Union[str, PathLike]) -> List[Dict[str, str]]:
         return _parse_mob_heads(mob_file)
 
 
-def _parse_mob_heads(mob_file: IO) -> List[Dict[str, str]]:
+def _parse_mob_heads(mob_file: IO) -> List[HeadSpec]:
     loot_table = json.load(mob_file)
-    head_drops = []
+    head_drops: List[Dict] = []
     for pool in loot_table["pools"]:
         for entry in pool["entries"]:
             if "children" in entry:
@@ -176,22 +164,22 @@ def _parse_mob_heads(mob_file: IO) -> List[Dict[str, str]]:
             if entry.get("name", "") == "minecraft:player_head":
                 head_drops.append(entry)
 
-    head_specs = []
+    head_specs: List[HeadSpec] = []
     for drop in head_drops:
         for head_function in drop["functions"]:
             head_spec = head_function["tag"]
             match = re.search(r'Name:".*?"', head_spec)
             if not match:
-                name = "???"
-                # name isn't actually used for anything anyway
+                parse_fail_message = f"Could not parse:\n {drop}"
+                raise RuntimeError(parse_fail_message)
             else:
                 name = match.group(0)[6:-1]
-            head_specs.append({name: head_spec[1:-1]})
+            head_specs.append(HeadSpec(name, head_spec[1:-1]))
 
     return head_specs
 
 
-def parse_give_command(command: str, name: str) -> Dict[str, str]:
+def parse_give_command(command: str, name: str) -> HeadSpec:
     """Parse a /give command (such as you'd find from a skin lookup site) to
     extract just the relevant specification that needs to go into the head-list
 
@@ -204,17 +192,17 @@ def parse_give_command(command: str, name: str) -> Dict[str, str]:
 
     Returns
     -------
-    1-item dict
-        the player-head specifications, in the form
-        {player_name: full_spec}
+    NamedTuple
+        The tokenized head specification
 
     Raises
     ------
     ValueError
         If the command could not be parsed
     """
-
-    match = re.search(r"(?:(SkullOwner:.*),display:)", command.strip())
+    match = re.search(r"(?:(SkullOwner:.*?)(?:,display:|}$))", command.strip())
     if not match:
         raise ValueError("Could not parse command")
-    return {name: r'display:{Name:"{\"text\":\"' + name + r'\"}"},' + match.group(1)}
+    return HeadSpec(
+        name, r'display:{Name:"{\"text\":\"' + name + r'\"}"},' + match.group(1)
+    )
