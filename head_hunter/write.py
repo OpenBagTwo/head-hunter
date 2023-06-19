@@ -143,7 +143,7 @@ def write_head_trades(
         template = template_file.readlines()
 
     header = (
-        "\n".join(template[:-2])
+        "".join(template[:-2])
         .replace("TRADE_TYPE", "head")
         .replace("PROVIDER", "provide_hermit_trades.mcfunction")
     )
@@ -178,7 +178,9 @@ def write_head_trades(
     return START_AT, trade_index
 
 
-def write_block_trades(commands: Iterable[str], start_at: int = -2) -> Tuple[int, int]:
+def write_block_trades(
+    commands: Iterable[str], start_at: int = 1002
+) -> Tuple[int, int]:
     """Render the file `add_block_trade.mcfunction` that will separately specify
     the list of block trades to provide the Wandering Trader
 
@@ -188,9 +190,7 @@ def write_block_trades(commands: Iterable[str], start_at: int = -2) -> Tuple[int
         The commands extracted from the original `add_trade.mcfunction` file
         (though I suppose you could provide your own)
     start_at: int, optional
-        The starting value for the trade index. A positive value will increment
-        the index on each successive trade. Otherwise, the trade index will
-        _decrement_. The default value is -2.
+        The starting value for the trade index. Default is 1000.
 
     Returns
     -------
@@ -219,7 +219,7 @@ def write_block_trades(commands: Iterable[str], start_at: int = -2) -> Tuple[int
         template = template_file.readlines()
 
     header = (
-        "\n".join(template[:-2])
+        "".join(template[:-2])
         .replace("TRADE_TYPE", "block")
         .replace("PROVIDER", "provide_block_trades.mcfunction")
     )
@@ -228,22 +228,17 @@ def write_block_trades(commands: Iterable[str], start_at: int = -2) -> Tuple[int
         PACK_FOLDER / "data" / "wandering_trades" / "functions" / BLOCK_TRADE_FILENAME
     )
 
-    increment = 1 if start_at > 0 else -1
-
     # see comment in write_head_trades about why we do this
-    trade_index = start_at - increment
+    trade_index = start_at - 1
 
     with trade_file_path.open("w") as trade_file:
         trade_file.write(header)
         for command in commands:
             trade_file.write(
-                command.replace("IDX", str(trade_index := trade_index + increment))
-                + "\n\n"
+                command.replace("IDX", str(trade_index := trade_index + 1)) + "\n\n"
             )
 
-    if increment > 0:
-        return start_at, trade_index
-    return trade_index, start_at
+    return start_at, trade_index
 
 
 def update_trade_count(
@@ -391,6 +386,7 @@ def patch_block_trade_provider_function(
     provider = Path(provider_function_path).read_text()
     Path(provider_function_path).write_text(
         provider.replace(
-            "wandering_trades:add_trade", BLOCK_TRADE_FILENAME.split(".")[0]
+            "wandering_trades:add_trade",
+            "wandering_trades:" + BLOCK_TRADE_FILENAME.split(".")[0],
         )
     )
