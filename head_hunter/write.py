@@ -274,7 +274,7 @@ def update_trade_count(
     ValueError
         If the trade provider file could not be properly munged
     """
-    if trade_provider in ("head", "hermit"):
+    if trade_provider in ("head", "heads", "hermit", "hermits"):
         trade_provider_file = (
             PACK_FOLDER
             / "data"
@@ -282,7 +282,7 @@ def update_trade_count(
             / "functions"
             / "provide_hermit_trades.mcfunction"
         )
-    elif trade_provider == "block":
+    elif trade_provider in ("block", "blocks"):
         trade_provider_file = (
             PACK_FOLDER
             / "data"
