@@ -1318,9 +1318,9 @@ Extract the combined zip file (&quot;VanillaTweaks_dXXXXXX_UNZIP_ME.zip&quot;) i
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">hermit_heads</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">parse_wandering_trades</span><span class="p">()</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">hermit_heads</span><span class="p">,</span> <span class="n">block_trades</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">parse_wandering_trades</span><span class="p">()</span>
 </pre></div>
-<div id="cell-4" class="clipboard-copy-txt">hermit_heads = parse.parse_wandering_trades()</div>
+<div id="cell-4" class="clipboard-copy-txt">hermit_heads, block_trades = parse.parse_wandering_trades()</div>
         
         </div>
     </div>
@@ -1328,6 +1328,18 @@ Extract the combined zip file (&quot;VanillaTweaks_dXXXXXX_UNZIP_ME.zip&quot;) i
 </div>
 </div>
 
+</div>
+</div>
+<div id="cell-id=2271e998-6363-4053-be96-2893827c2f4a" class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>(the block trades we'll hold onto for later)</p>
+
+</div>
+</div>
 </div>
 </div>
 <div id="cell-id=e7320853-ba23-4a5b-884f-18ffd6a15f23" class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
@@ -1424,8 +1436,20 @@ Extract the combined zip file (&quot;VanillaTweaks_dXXXXXX_UNZIP_ME.zip&quot;) i
 </div>
 
 </div>
+</div>
+<div id="cell-id=a90ebf3d-30b7-4dfe-9ab8-f3746792eeb1" class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Maybe I don't want every Hermit. I can create a new list by index:</p>
+
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div id="cell-id=e30273e0-98b8-4267-afec-7180f84c8320" class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div id="cell-id=5e51b80f-96b3-4a47-854f-a709b92b35a2" class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1445,80 +1469,13 @@ Extract the combined zip file (&quot;VanillaTweaks_dXXXXXX_UNZIP_ME.zip&quot;) i
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">hermit_heads</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
-</pre></div>
-<div id="cell-6" class="clipboard-copy-txt">hermit_heads[25].name</div>
-        
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>&#39;§r§eiskall85&#39;</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div id="cell-id=a90ebf3d-30b7-4dfe-9ab8-f3746792eeb1" class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Maybe I don't want every Hermit. I can create a new list by index:</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div id="cell-id=5e51b80f-96b3-4a47-854f-a709b92b35a2" class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-            <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-7">
-                <div>
-                    <span class="notice" hidden>Copied!</span>
-                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                    </svg>
-                    </div>
-                </clipboard-copy>
-            </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="c1"># this is a demo and not a reflection of my feelings about any hermit</span>
 <span class="n">my_hermits</span> <span class="o">=</span> <span class="p">[</span><span class="n">hermit_heads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">21</span><span class="p">)]</span>
 
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">head</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">my_hermits</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
-<div id="cell-7" class="clipboard-copy-txt"># this is a demo and not a reflection of my feelings about any hermit
+<div id="cell-6" class="clipboard-copy-txt"># this is a demo and not a reflection of my feelings about any hermit
 my_hermits = [hermit_heads[i] for i in (1, 2, 3, 5, 8, 13, 21)]
 
 for idx, head in enumerate(my_hermits):
@@ -1565,7 +1522,7 @@ for idx, head in enumerate(my_hermits):
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="mob-heads">Mob Heads<a class="anchor-link" href="#mob-heads">&#182;</a></h3><p>I don't know about you, but there are some mobs I am just not willing to kill, even for an amazing decorative head. Luckily, you don't have to.</p>
+<h3 id="mob-heads">Mob Heads<a class="anchor-link" href="#mob-heads">&#182;</a></h3><p>I don't know about you, but there are some mobs I am just not willing to kill, even for an amazing decorative head. So instead, why not have the Wandering Trader <del>do the dirtywork</del> sell them to us?</p>
 
 </div>
 </div>
@@ -1576,12 +1533,12 @@ for idx, head in enumerate(my_hermits):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-8">
+                <clipboard-copy for="cell-7">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1598,7 +1555,7 @@ for idx, head in enumerate(my_hermits):
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">head</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mob_heads</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
-<div id="cell-8" class="clipboard-copy-txt">mob_heads = []
+<div id="cell-7" class="clipboard-copy-txt">mob_heads = []
 for mob in ("bee", "cat", "fox", "panda", "sniffer", "silverfish"):
     mob_heads.extend(parse.parse_mob_heads(mob))
 
@@ -1676,12 +1633,12 @@ for idx, head in enumerate(mob_heads):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-9">
+                <clipboard-copy for="cell-8">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1695,7 +1652,7 @@ for idx, head in enumerate(mob_heads):
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">head</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">my_mob_heads</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
-<div id="cell-9" class="clipboard-copy-txt">my_mob_heads = [mob_heads[i] for i in (0, 4, 13, 14, 15, 16, 19, 24, 25)]
+<div id="cell-8" class="clipboard-copy-txt">my_mob_heads = [mob_heads[i] for i in (0, 4, 13, 14, 15, 16, 19, 24, 25)]
 for idx, head in enumerate(my_mob_heads):
     print(idx, repr(head))</div>
         
@@ -1758,12 +1715,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-10">
+                <clipboard-copy for="cell-9">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1775,7 +1732,7 @@ you can add their heads to the list:</p>
             </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="kn">from</span> <span class="nn">head_hunter</span> <span class="kn">import</span> <span class="n">HeadSpec</span>
 </pre></div>
-<div id="cell-10" class="clipboard-copy-txt">from head_hunter import HeadSpec</div>
+<div id="cell-9" class="clipboard-copy-txt">from head_hunter import HeadSpec</div>
         
         </div>
     </div>
@@ -1790,12 +1747,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-11">
+                <clipboard-copy for="cell-10">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1824,7 +1781,7 @@ you can add their heads to the list:</p>
     <span class="p">),</span>
 <span class="p">]</span>
 </pre></div>
-<div id="cell-11" class="clipboard-copy-txt">my_player_heads = [
+<div id="cell-10" class="clipboard-copy-txt">my_player_heads = [
     HeadSpec.from_username("C418"),
     HeadSpec.from_username("gnembon"),
     HeadSpec.from_username("kingbdogz"),
@@ -1868,12 +1825,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-12">
+                <clipboard-copy for="cell-11">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1885,7 +1842,7 @@ you can add their heads to the list:</p>
             </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="kn">from</span> <span class="nn">head_hunter</span> <span class="kn">import</span> <span class="n">write</span>
 </pre></div>
-<div id="cell-12" class="clipboard-copy-txt">from head_hunter import write</div>
+<div id="cell-11" class="clipboard-copy-txt">from head_hunter import write</div>
         
         </div>
     </div>
@@ -1912,12 +1869,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-13">
+                <clipboard-copy for="cell-12">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1927,9 +1884,9 @@ you can add their heads to the list:</p>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">write</span><span class="o">.</span><span class="n">write_trades</span><span class="p">(</span><span class="n">my_hermits</span> <span class="o">+</span> <span class="n">my_mob_heads</span> <span class="o">+</span> <span class="n">my_player_heads</span><span class="p">)</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">write</span><span class="o">.</span><span class="n">write_head_trades</span><span class="p">(</span><span class="n">my_hermits</span> <span class="o">+</span> <span class="n">my_mob_heads</span> <span class="o">+</span> <span class="n">my_player_heads</span><span class="p">)</span>
 </pre></div>
-<div id="cell-13" class="clipboard-copy-txt">write.write_trades(my_hermits + my_mob_heads + my_player_heads)</div>
+<div id="cell-12" class="clipboard-copy-txt">write.write_head_trades(my_hermits + my_mob_heads + my_player_heads)</div>
         
         </div>
     </div>
@@ -1945,7 +1902,7 @@ you can add their heads to the list:</p>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
 
 
 
@@ -1979,12 +1936,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-14">
+                <clipboard-copy for="cell-13">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -1994,9 +1951,9 @@ you can add their heads to the list:</p>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">write</span><span class="o">.</span><span class="n">update_trade_count</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">)</span>  <span class="c1"># a little sugar</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">write</span><span class="o">.</span><span class="n">update_trade_count</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">trade_provider</span><span class="o">=</span><span class="s2">&quot;head&quot;</span><span class="p">)</span>  <span class="c1"># a little sugar</span>
 </pre></div>
-<div id="cell-14" class="clipboard-copy-txt">write.update_trade_count(*_)  # a little sugar</div>
+<div id="cell-13" class="clipboard-copy-txt">write.update_trade_count(*_, trade_provider="head")  # a little sugar</div>
         
         </div>
     </div>
@@ -2023,12 +1980,12 @@ you can add their heads to the list:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-15">
+                <clipboard-copy for="cell-14">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -2041,14 +1998,14 @@ you can add their heads to the list:</p>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">head</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
     <span class="n">parse</span><span class="o">.</span><span class="n">parse_wandering_trades</span><span class="p">(</span>
         <span class="s2">&quot;Head Hunter/data/wandering_trades/functions/add_trade.mcfunction&quot;</span>
-    <span class="p">)</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
 </pre></div>
-<div id="cell-15" class="clipboard-copy-txt">for idx, head in enumerate(
+<div id="cell-14" class="clipboard-copy-txt">for idx, head in enumerate(
     parse.parse_wandering_trades(
         "Head Hunter/data/wandering_trades/functions/add_trade.mcfunction"
-    )
+    )[0]
 ):
     print(idx, repr(head))</div>
         
@@ -2092,6 +2049,75 @@ you can add their heads to the list:</p>
 19 HeadSpec(ilmango)
 20 HeadSpec(OpenBagTwo)
 21 HeadSpec(Phenix)
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<div id="cell-id=8bd1a892-1960-4855-8e98-bdd82c3c2e7c" class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Now remember those block trades we extracted earlier? Let's write them to file now too.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div id="cell-id=5d413cef-8779-4923-8e9e-562fbde3f75f" class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+            <div class="zeroclipboard-container">
+                <clipboard-copy for="cell-15">
+                <div>
+                    <span class="notice" hidden>Copied!</span>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                    </svg>
+                    </div>
+                </clipboard-copy>
+            </div>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">bounds</span> <span class="o">=</span> <span class="n">write</span><span class="o">.</span><span class="n">write_block_trades</span><span class="p">(</span><span class="n">block_trades</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+<span class="n">write</span><span class="o">.</span><span class="n">update_trade_count</span><span class="p">(</span><span class="o">*</span><span class="n">bounds</span><span class="p">,</span> <span class="n">trade_provider</span><span class="o">=</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
+</pre></div>
+<div id="cell-15" class="clipboard-copy-txt">bounds = write.write_block_trades(block_trades)
+print(bounds)
+write.update_trade_count(*bounds, trade_provider="block")</div>
+        
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>(1002, 1191)
 </pre>
 </div>
 </div>
