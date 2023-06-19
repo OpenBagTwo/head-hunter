@@ -5,7 +5,7 @@ from os import PathLike
 from pathlib import Path
 from typing import Iterable, List, Optional, Tuple, Union
 
-from . import PACK_FOLDER, HeadSpec
+from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER, HeadSpec
 
 META_FILES = (
     "pack.mcmeta",
@@ -81,14 +81,14 @@ def _write_meta_file(template_file: Path, version: str) -> None:
         pack_file.write(mcmeta)
 
 
-def write_trades(
+def write_head_trades(
     trades: Iterable[HeadSpec],
     price: Optional[Tuple[str, int]] = None,
     purchase_limit: int = 3,
     xp_bonus: int = 0,
 ) -> Tuple[int, int]:
-    """Render the add_trade.mcfunction file that will give the Wandering Trader
-    a specified list of head trades
+    """Render the `add_trade.mcfunction` file that will give the
+    Wandering Trader a specified list of head trades
 
     Parameters
     ----------
@@ -116,8 +116,9 @@ def write_trades(
     Returns
     -------
     (int, int) tuple
-        The lower and upper bounds of the trade indices corresponding to the
-        written trades (the lower bound is hard-coded as `START_AT` but still...)
+        The (inclusive) lower and upper bounds of the trade indices corresponding
+        to the written trades (the lower bound is hard-coded as
+        `START_AT` but still...)
 
     Notes
     -----
@@ -141,7 +142,11 @@ def write_trades(
     with open(template_path) as template_file:
         template = template_file.readlines()
 
-    header = template[:-2]
+    header = (
+        "\n".join(template[:-2])
+        .replace("TRADE_TYPE", "head")
+        .replace("PROVIDER", "provide_hermit_trades.mcfunction")
+    )
 
     command_template = "".join(template[-2:])
 
@@ -159,24 +164,92 @@ def write_trades(
     # should be the last
     trade_index = START_AT - 1
 
-    for i, head in enumerate(trades):
+    for head in trades:
         command = command_template.replace(
             "IDX", str(trade_index := trade_index + 1)  # ++trade_index
         ).replace("HEAD_SPEC", head.spec)
         commands.append(command)
 
     trade_file_path = (
-        PACK_FOLDER / "data" / "wandering_trades" / "functions" / "add_trade.mcfunction"
+        PACK_FOLDER / "data" / "wandering_trades" / "functions" / HEAD_TRADE_FILENAME
     )
 
     trade_file_path.write_text("".join([*header, *commands]))
     return START_AT, trade_index
 
 
+def write_block_trades(commands: Iterable[str], start_at: int = -2) -> Tuple[int, int]:
+    """Render the file `add_block_trade.mcfunction` that will separately specify
+    the list of block trades to provide the Wandering Trader
+
+    Parameters
+    ----------
+    commands: list-like of str
+        The commands extracted from the original `add_trade.mcfunction` file
+        (though I suppose you could provide your own)
+    start_at: int, optional
+        The starting value for the trade index. A positive value will increment
+        the index on each successive trade. Otherwise, the trade index will
+        _decrement_. The default value is -2.
+
+    Returns
+    -------
+    (int, int) tuple
+        The lower and upper bounds of the trade indices corresponding to the
+        written trades (note that if start_at is negative, then the start_at
+        value will be the *upper bound*)
+
+    Notes
+    -----
+    If the return values are such that the upper bound is less than the lower
+    bound, that means that no trades were actually written.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the pack folder or functions subdirectory doesn't exist
+        (meaning you haven't downloaded the base data pack or that the file
+        structure is corrupted
+    PermissionError
+        If you don't have the ability to write to the pack folder
+    """
+    template_path = Path(__file__).parent / "templates" / "add_trade.mcfunction"
+
+    with open(template_path) as template_file:
+        template = template_file.readlines()
+
+    header = (
+        "\n".join(template[:-2])
+        .replace("TRADE_TYPE", "block")
+        .replace("PROVIDER", "provide_block_trades.mcfunction")
+    )
+
+    trade_file_path = (
+        PACK_FOLDER / "data" / "wandering_trades" / "functions" / BLOCK_TRADE_FILENAME
+    )
+
+    increment = 1 if start_at > 0 else -1
+
+    # see comment in write_head_trades about why we do this
+    trade_index = start_at - increment
+
+    with trade_file_path.open("w") as trade_file:
+        trade_file.write(header)
+        for command in commands:
+            trade_file.write(
+                command.replace("IDX", str(trade_index := trade_index + increment))
+                + "\n\n"
+            )
+
+    if increment > 0:
+        return start_at, trade_index
+    return trade_index, start_at
+
+
 def update_trade_count(
     lower_bound: int,
     upper_bound: int,
-    trade_provider_file: Optional[Union[str, PathLike]] = None,
+    trade_provider: Union[str, PathLike],
 ) -> None:
     """Update the "provide trades" function file to generate a random number
     from the specified bounds
@@ -187,10 +260,10 @@ def update_trade_count(
         The number of the first trade (inclusive)
     upper_bound : int
         The number of the last trade (inclusive)
-    trade_provider_file : path, optional
-        The file to update (in case you renamed it). If None is provided, this
-        method will look for "provide_hermit_trades.mcfunction" within the
-        default pack folder.
+    trade_provider : str or path
+        Which trade provider to update. Should either be "head", "block" or
+        the path to the actual `mcfunction` file (in case you have something
+        custom going on).
 
     Raises
     ------
@@ -201,7 +274,7 @@ def update_trade_count(
     ValueError
         If the trade provider file could not be properly munged
     """
-    if trade_provider_file is None:
+    if trade_provider in ("head", "hermit"):
         trade_provider_file = (
             PACK_FOLDER
             / "data"
@@ -209,8 +282,18 @@ def update_trade_count(
             / "functions"
             / "provide_hermit_trades.mcfunction"
         )
+    elif trade_provider == "block":
+        trade_provider_file = (
+            PACK_FOLDER
+            / "data"
+            / "wandering_trades"
+            / "functions"
+            / "provide_block_trades.mcfunction"
+        )
+    else:
+        trade_provider_file = Path(trade_provider)
 
-    commands = Path(trade_provider_file).read_text().splitlines()
+    commands = trade_provider_file.read_text().splitlines()
 
     bound_idx = 0
     bounds = (lower_bound, upper_bound)
@@ -239,14 +322,11 @@ def update_trade_count(
     Path(trade_provider_file).write_text("\n".join(write_me))
 
 
-def patch_tick_function(
+def patch_block_trades_out_of_tick_function(
     tick_function_path: Optional[Union[str, PathLike]] = None
 ) -> None:
-    """Since this package completely overwrites the trade list, the mini-block
-    trades that are in the standard pack will be removed, and
-    `provide_block_trades.mcfunction` will break when it tries to load them.
-    Thus, this method is needed to overwrite `ticks.mcfunction` so that function
-    doesn't get called.
+    """If you're not looking to keep the block trades, then this method removes
+    all reference to them from `tick.mcfunction`
 
     Parameters
     ----------
@@ -284,3 +364,33 @@ def patch_tick_function(
         write_me.append("")  # always good to end with a newline
 
     Path(tick_function_path).write_text("\n".join(write_me))
+
+
+def patch_block_trade_provider_function(
+    provider_function_path: Optional[Union[str, PathLike]] = None
+) -> None:
+    """If you're looking to keep the block trades, then update the block
+    trade provider so that it knows where to find them
+
+    Parameters
+    ----------
+    provider_function_path : path, optional
+        The file to update (in case it's in a weird place). If None is provided,
+        this method will look for "provide_block_trades.mcfunction" within
+        the default pack folder.
+    """
+    if provider_function_path is None:
+        provider_function_path = (
+            PACK_FOLDER
+            / "data"
+            / "wandering_trades"
+            / "functions"
+            / "provide_block_trades.mcfunction"
+        )
+
+    provider = Path(provider_function_path).read_text()
+    Path(provider_function_path).write_text(
+        provider.replace(
+            "wandering_trades:add_trade", BLOCK_TRADE_FILENAME.split(".")[0]
+        )
+    )
