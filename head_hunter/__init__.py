@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import NamedTuple, Optional
 
 PACK_FOLDER = Path("Head Hunter")
+HEAD_TRADE_FILENAME = "add_trade.mcfunction"
+BLOCK_TRADE_FILENAME = "add_block_trade.mcfunction"
 
 
 class HeadSpec(NamedTuple):

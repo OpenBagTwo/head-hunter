@@ -11,7 +11,10 @@ from typing import IO, Generator, List, Optional, Union
 from zipfile import BadZipFile, ZipFile
 
 from . import PACK_FOLDER
-from .write import patch_tick_function
+from .write import (
+    patch_block_trade_provider_function,
+    patch_block_trades_out_of_tick_function,
+)
 
 
 def list_available_packs(
@@ -137,7 +140,7 @@ def file_from_data_pack(
 
 def copy_data_from_existing_pack(
     pack_path: Optional[Union[str, PathLike]] = None,
-    keep_block_trades: Optional[bool] = False,
+    keep_block_trades: Optional[bool] = True,
 ) -> None:
     """Copy the "data" folder from an existing pack into the default pack folder,
     overwriting any existing data directory
@@ -149,13 +152,12 @@ def copy_data_from_existing_pack(
         for a "wandering trades" data pack in the "packs" folder ("hermit edition"
         packs should be given priority).
     keep_block_trades: bool, optional
-        Since this package completely overwrites the trade list, the mini-block
-        trades that are in the standard pack will be removed, and
-        `provide_block_trades.mcfunction` will break when it tries to load them.
-        Thus, by default, this method *does not* copy `keep_block_trades` and
-        removes any reference to it from `tick.mcfunction`. If you plan on
-        adding back the block trades yourself manually, pass in
-        `keep_block_trades=True`.
+        The default workflow for using this script will have you writing the
+        mini-block trades to a separate file and thus requires patching
+        `provide_block_trades.mcfunction`. If you aren't interested in having
+        your Wandering Head Hunter sell mini-blocks, then pass in
+        `keep_block_trades=False` to remove all block trade references from the
+        extracted files.
 
     Raises
     ------
@@ -180,7 +182,9 @@ def copy_data_from_existing_pack(
                 shutil.copytree(
                     donor_root / "data",
                     PACK_FOLDER / "data",
-                    ignore=shutil.ignore_patterns("provide_block_trades.mcfunction"),
+                    ignore=None
+                    if keep_block_trades
+                    else shutil.ignore_patterns("provide_block_trades.mcfunction"),
                 )
             else:
                 zipped = ZipFile(donor_root)
@@ -197,7 +201,9 @@ def copy_data_from_existing_pack(
                     ],
                 )
             if not keep_block_trades:
-                patch_tick_function()
+                patch_block_trades_out_of_tick_function()
+            else:
+                patch_block_trade_provider_function()
 
         except Exception as fail:
             if move_back:

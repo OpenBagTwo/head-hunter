@@ -3,15 +3,15 @@ import json
 import re
 from os import PathLike
 from pathlib import Path
-from typing import IO, Dict, List, Optional, Union
+from typing import IO, Dict, List, Optional, Tuple, Union
 
-from . import HeadSpec
+from . import HEAD_TRADE_FILENAME, HeadSpec
 from .extract import file_from_data_pack
 
 
 def parse_wandering_trades(
     trade_path: Optional[Union[str, PathLike]] = None
-) -> List[HeadSpec]:
+) -> Tuple[List[HeadSpec], List[str]]:
     """Parse an existing trade list
 
     Parameters
@@ -29,6 +29,9 @@ def parse_wandering_trades(
         /give @s minecraft:player_head{head.spec}
         ```
         would give you the specified head
+    list of str
+        list of block trade commands, with the trade index replaced by the
+        placeholder "IDX"
 
     Raises
     ------
@@ -47,7 +50,7 @@ def parse_wandering_trades(
     if trade_path is None:
         with file_from_data_pack(
             "wandering trades hermit edition",
-            Path("data") / "wandering_trades" / "functions" / "add_trade.mcfunction",
+            Path("data") / "wandering_trades" / "functions" / HEAD_TRADE_FILENAME,
         ) as trade_file:
             return _parse_wandering_trades(trade_file)
     else:
@@ -55,8 +58,9 @@ def parse_wandering_trades(
             return _parse_wandering_trades(trade_file)
 
 
-def _parse_wandering_trades(trade_file: IO) -> List[HeadSpec]:
+def _parse_wandering_trades(trade_file: IO) -> Tuple[List[HeadSpec], List[str]]:
     player_head_trades: List[HeadSpec] = []
+    block_trades: List[str] = []
     for line_num, line in enumerate(trade_file.readlines()):
         if isinstance(line, bytes):
             line = line.decode("utf-8")
@@ -74,7 +78,12 @@ def _parse_wandering_trades(trade_file: IO) -> List[HeadSpec]:
             continue
 
         if 'buyB:{id:"minecraft:air"' not in command:
-            # then it's a mini-block
+            # then it's a block trade
+            match = re.search(r"(?:wt_tradeIndex matches ([0-9]*) run)", command)
+            if not match:
+                raise RuntimeError(parse_fail_message)
+            span = match.span(1)
+            block_trades.append(command[: span[0]] + "IDX" + command[span[1] :])
             continue
 
         # this is brittle generally, but depth matching is probably YAGNI
@@ -100,7 +109,7 @@ def _parse_wandering_trades(trade_file: IO) -> List[HeadSpec]:
 
         player_head_trades.append(HeadSpec(player_name, skull_spec))
 
-    return player_head_trades
+    return player_head_trades, block_trades
 
 
 def parse_mob_heads(mob: Union[str, PathLike]) -> List[HeadSpec]:

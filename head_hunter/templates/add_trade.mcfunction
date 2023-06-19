@@ -1,6 +1,6 @@
-# Desc: Prepends a trade to the wandering trader based on its trade index
+# Desc: Prepends a TRADE_TYPE trade to the wandering trader based on its trade index
 #
-# Called by: wandering_trades:tick
+# Called by: wandering_trades:CALLER
 
 # Trades
 
