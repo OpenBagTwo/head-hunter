@@ -35,6 +35,9 @@ function, or you can browse [the API documentation online](https://openbagtwo.gi
 There's also a handy [end-to-end tutorial](Tutorial.ipynb) that you can even run interactively
 in [Jupyter](https://jupyter.org/).
 
+Or if you'd prefer, you can follow along with this video tutorial:
+[![Video Tutorial](https://img.youtube.com/vi/yGGrCaD3qCo/hqdefault.jpg)](https://www.youtube.com/watch?v=yGGrCaD3qCo)
+
 ## Contributing
 
 A development environment is provided in the form of a
