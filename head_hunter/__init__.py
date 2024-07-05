@@ -1,4 +1,5 @@
 """The Head Hunter package"""
+
 import re
 from pathlib import Path
 from typing import Iterable, List, NamedTuple, Optional, Union

@@ -2,9 +2,9 @@ name: head-hunter
 channels:
 - conda-forge
 dependencies:
-- python==3.8
+- python==3.10
 - ipython>=8
-- pip>=22
+- pip>=24
 - pre-commit
 - black
 - isort
