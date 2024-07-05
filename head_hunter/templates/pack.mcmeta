@@ -1,6 +1,6 @@
 {
 	"pack": {
-		"pack_format": 15,
+		"pack_format": PACK_FORMAT,
 		"description": [
 			{"text":"Custom Wandering Head Trader","color":"aqua"},
 			{"text":"\nVERSION","color":"dark_red"},

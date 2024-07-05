@@ -8,6 +8,8 @@ from typing import Iterable
 from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER
 from ._legacy import LegacyHeadSpec
 
+SUPPORTED_PACK_FORMATS = (48, 15)
+
 META_FILES = (
     "pack.mcmeta",
     "data/vanillatweaks/advancements/wandering_trades.json",
@@ -19,6 +21,7 @@ START_AT = 2
 def write_meta_files(
     *template_paths: str | PathLike,
     version: str | None = None,
+    legacy: bool = False,
 ) -> None:
     """Write a metadata file (or files), using the template in the templates
     folder (or one(s) you brought yourself)
@@ -31,6 +34,10 @@ def write_meta_files(
     version : str, optional
         The version to give to the pack. If None is provided, one will
         be generated based on the current date (calver).
+    legacy : bool, optional
+        By default, this function will generate a datapack compatible with
+        Minecraft 1.21 and above. To instead write for Minecraft 1.20.4
+        and below, pass in `legacy=True`.
 
     Returns
     -------
@@ -38,8 +45,9 @@ def write_meta_files(
 
     Notes
     -----
-    The list of supported metadata files is hard-coded in this module as
-    `META_FILES`.
+    - The list of supported metadata files is hard-coded in this module as
+      `META_FILES`.
+    - This method does not support generating datapacks for Minecraft 1.20.5/6
 
     Raises
     ------
@@ -54,6 +62,7 @@ def write_meta_files(
     """
     if version is None:
         version = dt.date.today().strftime("v%Y.%m.%d")
+    pack_format = SUPPORTED_PACK_FORMATS[1] if legacy else SUPPORTED_PACK_FORMATS[0]
 
     if not template_paths:
         # TODO: replace this with some proper importlib resources
@@ -63,13 +72,15 @@ def write_meta_files(
         )
 
     for file in template_paths:
-        _write_meta_file(Path(file), version)
+        _write_meta_file(Path(file), version, pack_format)
 
 
-def _write_meta_file(template_file: Path, version: str) -> None:
+def _write_meta_file(template_file: Path, version: str, pack_format: int) -> None:
     template = template_file.read_text()
 
-    mcmeta = template.replace("VERSION", version)
+    mcmeta = template.replace("VERSION", version).replace(
+        "PACK_FORMAT", str(pack_format)
+    )
 
     for file in META_FILES:
         if file.split("/")[-1] == template_file.name:
