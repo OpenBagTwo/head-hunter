@@ -3,7 +3,7 @@
 import datetime as dt
 from os import PathLike
 from pathlib import Path
-from typing import Iterable, List, Optional, Tuple, Union
+from typing import Iterable
 
 from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER, HeadSpec
 
@@ -16,8 +16,8 @@ START_AT = 2
 
 
 def write_meta_files(
-    *template_paths: Union[str, PathLike],
-    version: Optional[str] = None,
+    *template_paths: str | PathLike,
+    version: str | None = None,
 ) -> None:
     """Write a metadata file (or files), using the template in the templates
     folder (or one(s) you brought yourself)
@@ -83,10 +83,10 @@ def _write_meta_file(template_file: Path, version: str) -> None:
 
 def write_head_trades(
     trades: Iterable[HeadSpec],
-    price: Optional[Tuple[str, int]] = None,
+    price: tuple[str, int] | None = None,
     purchase_limit: int = 3,
     xp_bonus: int = 0,
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """Render the `add_trade.mcfunction` file that will give the
     Wandering Trader a specified list of head trades
 
@@ -180,7 +180,7 @@ def write_head_trades(
 
 def write_block_trades(
     commands: Iterable[str], start_at: int = 1002
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """Render the file `add_block_trade.mcfunction` that will separately specify
     the list of block trades to provide the Wandering Trader
 
@@ -244,7 +244,7 @@ def write_block_trades(
 def update_trade_count(
     lower_bound: int,
     upper_bound: int,
-    trade_provider: Union[str, PathLike],
+    trade_provider: str | PathLike,
 ) -> None:
     """Update the "provide trades" function file to generate a random number
     from the specified bounds
@@ -292,7 +292,7 @@ def update_trade_count(
 
     bound_idx = 0
     bounds = (lower_bound, upper_bound)
-    write_me: List[str] = []
+    write_me: list[str] = []
     for command in commands:
         if command.startswith(f"scoreboard players set @s math_input{bound_idx + 1}"):
             try:
@@ -318,7 +318,7 @@ def update_trade_count(
 
 
 def patch_block_trades_out_of_tick_function(
-    tick_function_path: Optional[Union[str, PathLike]] = None
+    tick_function_path: str | PathLike | None = None,
 ) -> None:
     """If you're not looking to keep the block trades, then this method removes
     all reference to them from `tick.mcfunction`
@@ -337,7 +337,7 @@ def patch_block_trades_out_of_tick_function(
 
     commands = Path(tick_function_path).read_text().splitlines()
 
-    write_me: List[str] = []
+    write_me: list[str] = []
     for command in commands:
         if (
             "!has_new_block_trades" in command
@@ -362,7 +362,7 @@ def patch_block_trades_out_of_tick_function(
 
 
 def patch_block_trade_provider_function(
-    provider_function_path: Optional[Union[str, PathLike]] = None
+    provider_function_path: str | PathLike | None = None,
 ) -> None:
     """If you're looking to keep the block trades, then update the block
     trade provider so that it knows where to find them

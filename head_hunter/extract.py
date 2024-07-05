@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from os import PathLike
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import IO, Generator, List, Optional, Union
+from typing import IO, Generator
 from zipfile import BadZipFile, ZipFile
 
 from . import PACK_FOLDER
@@ -18,9 +18,7 @@ from .write import (
 )
 
 
-def list_available_packs(
-    pack_directory: Optional[Union[str, PathLike]] = None
-) -> List[Path]:
+def list_available_packs(pack_directory: str | PathLike | None = None) -> list[Path]:
     """Return a list of all data packs (zipped or not) in the specified pack
     directory
 
@@ -50,9 +48,7 @@ def list_available_packs(
     )
 
 
-def get_data_pack(
-    pack_name: str, pack_directory: Optional[Union[str, PathLike]] = None
-) -> Path:
+def get_data_pack(pack_name: str, pack_directory: str | PathLike | None = None) -> Path:
     """Get a specific data pack
 
     Parameters
@@ -80,7 +76,7 @@ def get_data_pack(
         If there are multiple packs matching the given specification
     """
     pack_pattern = _normalize_file_name(pack_name) + "*"
-    matches: List[Path] = [
+    matches: list[Path] = [
         file
         for file in list_available_packs(pack_directory)
         if fnmatch.fnmatchcase(_normalize_file_name(file.name), pack_pattern)
@@ -100,8 +96,8 @@ def get_data_pack(
 @contextmanager
 def file_from_data_pack(
     pack_name: str,
-    resource: Union[str, PathLike],
-    pack_directory: Optional[Union[str, PathLike]] = None,
+    resource: str | PathLike,
+    pack_directory: str | PathLike | None = None,
 ) -> Generator[IO, None, None]:
     """Extract a specific file from a data pack
 
@@ -140,8 +136,8 @@ def file_from_data_pack(
 
 
 def copy_data_from_existing_pack(
-    pack_path: Optional[Union[str, PathLike]] = None,
-    keep_block_trades: Optional[bool] = True,
+    pack_path: str | PathLike | None = None,
+    keep_block_trades: bool | None = True,
 ) -> None:
     """Copy the "data" folder from an existing pack into the default pack folder,
     overwriting any existing data directory
