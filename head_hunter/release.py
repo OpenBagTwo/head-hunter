@@ -5,12 +5,11 @@ import shutil
 from os import PathLike
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Optional, Union
 
 from . import PACK_FOLDER
 
 
-def make_zip(destination_path: Optional[Union[str, PathLike]] = None):
+def make_zip(destination_path: str | PathLike | None = None):
     """Bundle up your pack folder as a data pack zip file
 
     Parameters

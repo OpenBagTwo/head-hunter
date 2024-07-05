@@ -2,7 +2,7 @@
 
 import re
 from pathlib import Path
-from typing import Iterable, List, NamedTuple, Optional, Union
+from typing import Iterable, NamedTuple
 
 PACK_FOLDER = Path("Head Hunter")
 HEAD_TRADE_FILENAME = "add_trade.mcfunction"
@@ -36,7 +36,7 @@ class HeadSpec(NamedTuple):
     def spec(self):
         return r'display:{Name:"{\"text\":\"' + self.name + r'\"}"},' + self.skull_owner
 
-    comment: Optional[str] = None
+    comment: str | None = None
 
     @classmethod
     def from_username(cls, name: str) -> "HeadSpec":
@@ -102,7 +102,7 @@ def dumps(heads: Iterable[HeadSpec]) -> str:
     return "\n\n".join([head.dumps() for head in heads])
 
 
-def loads(headlist: Union[str, bytes]) -> List[HeadSpec]:
+def loads(headlist: str | bytes) -> list[HeadSpec]:
     """Deserialize a list of HeadSpecs written by `dumps()`
 
     Parameters
@@ -118,7 +118,7 @@ def loads(headlist: Union[str, bytes]) -> List[HeadSpec]:
     """
     if isinstance(headlist, bytes):
         headlist = headlist.decode("utf-8")
-    heads: List[HeadSpec] = []
+    heads: list[HeadSpec] = []
     for head in headlist.split("\n\n"):
         lines = head.splitlines()
         if len(lines) == 1:

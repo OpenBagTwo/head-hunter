@@ -4,15 +4,15 @@ import json
 import re
 from os import PathLike
 from pathlib import Path
-from typing import IO, Dict, List, Optional, Tuple, Union
+from typing import IO
 
 from . import HEAD_TRADE_FILENAME, HeadSpec
 from .extract import file_from_data_pack
 
 
 def parse_wandering_trades(
-    trade_path: Optional[Union[str, PathLike]] = None
-) -> Tuple[List[HeadSpec], List[str]]:
+    trade_path: str | PathLike | None = None,
+) -> tuple[list[HeadSpec], list[str]]:
     """Parse an existing trade list
 
     Parameters
@@ -59,9 +59,9 @@ def parse_wandering_trades(
             return _parse_wandering_trades(trade_file)
 
 
-def _parse_wandering_trades(trade_file: IO) -> Tuple[List[HeadSpec], List[str]]:
-    player_head_trades: List[HeadSpec] = []
-    block_trades: List[str] = []
+def _parse_wandering_trades(trade_file: IO) -> tuple[list[HeadSpec], list[str]]:
+    player_head_trades: list[HeadSpec] = []
+    block_trades: list[str] = []
     for line_num, line in enumerate(trade_file.readlines()):
         if isinstance(line, bytes):
             line = line.decode("utf-8")
@@ -113,7 +113,7 @@ def _parse_wandering_trades(trade_file: IO) -> Tuple[List[HeadSpec], List[str]]:
     return player_head_trades, block_trades
 
 
-def parse_mob_heads(mob: Union[str, PathLike]) -> List[HeadSpec]:
+def parse_mob_heads(mob: str | PathLike) -> list[HeadSpec]:
     """Extract head specs from a "More Mob Heads" data pack loot table.
 
     Parameters
@@ -167,9 +167,9 @@ def parse_mob_heads(mob: Union[str, PathLike]) -> List[HeadSpec]:
         return _parse_mob_heads(mob_file)
 
 
-def _parse_mob_heads(mob_file: IO) -> List[HeadSpec]:
+def _parse_mob_heads(mob_file: IO) -> list[HeadSpec]:
     loot_table = json.load(mob_file)
-    head_drops: List[Dict] = []
+    head_drops: list[dict] = []
     for pool in loot_table["pools"]:
         for entry in pool["entries"]:
             if "children" in entry:
@@ -179,7 +179,7 @@ def _parse_mob_heads(mob_file: IO) -> List[HeadSpec]:
             if entry.get("name", "") == "minecraft:player_head":
                 head_drops.append(entry)
 
-    head_specs: List[HeadSpec] = []
+    head_specs: list[HeadSpec] = []
     for drop in head_drops:
         for head_function in drop["functions"]:
             head_spec = head_function["tag"]

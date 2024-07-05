@@ -21,7 +21,7 @@ You'll also need to grab yourself a copies of the Vanilla Tweaks data packs.
 
 ## Usage
 
-This package is compatible with Python 3.8 or newer and consists of four modules:
+This package is compatible with Python 3.10 or newer and consists of four modules:
 
 1. `extract`, which extracts files from existing data packs
 1. `parse`, which parses head configurations from data pack functions and `/give` commands
