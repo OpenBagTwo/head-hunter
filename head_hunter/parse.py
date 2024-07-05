@@ -1,4 +1,5 @@
 """Utilities for parsing an existing trade list"""
+
 import json
 import re
 from os import PathLike

@@ -1,4 +1,5 @@
 """Utilities for loading a particular file from inside a zipped data pack"""
+
 import fnmatch
 import os
 import shutil
@@ -182,9 +183,11 @@ def copy_data_from_existing_pack(
                 shutil.copytree(
                     donor_root / "data",
                     PACK_FOLDER / "data",
-                    ignore=None
-                    if keep_block_trades
-                    else shutil.ignore_patterns("provide_block_trades.mcfunction"),
+                    ignore=(
+                        None
+                        if keep_block_trades
+                        else shutil.ignore_patterns("provide_block_trades.mcfunction")
+                    ),
                 )
             else:
                 zipped = ZipFile(donor_root)

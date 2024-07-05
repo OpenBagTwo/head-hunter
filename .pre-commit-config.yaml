@@ -1,27 +1,27 @@
 repos:
 - repo: https://github.com/psf/black
-  rev: 23.3.0
+  rev: 24.4.2
   hooks:
   - id: black
-    language_version: python3.8
+    language_version: python3.10
 - repo: https://github.com/pycqa/isort
-  rev: 5.12.0
+  rev: 5.13.2
   hooks:
   - id: isort
     args: [--profile=black]
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.3.0
+  rev: v1.10.1
   hooks:
   - id: mypy
-    args: [--python-version=3.8, --ignore-missing-imports]
+    args: [--python-version=3.10, --ignore-missing-imports]
 - repo: https://github.com/nbQA-dev/nbQA
-  rev: 1.7.0
+  rev: 1.8.5
   hooks:
   - id: nbqa-isort
   - id: nbqa-black
-    args: [--target-version=py38]
+    args: [--target-version=py310]
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.9.0
+  rev: v2.13.0
   hooks:
   - id: pretty-format-ini
     args: [--autofix]
@@ -29,7 +29,7 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix]
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v4.6.0
   hooks:
   - id: check-json
   - id: pretty-format-json
