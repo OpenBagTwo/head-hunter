@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from os import PathLike
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import IO, Generator
+from typing import IO, Generator, Iterable
 from zipfile import BadZipFile, ZipFile
 
 from . import PACK_FOLDER
@@ -96,7 +96,7 @@ def get_data_pack(pack_name: str, pack_directory: str | PathLike | None = None) 
 @contextmanager
 def file_from_data_pack(
     pack_name: str,
-    resource: str | PathLike,
+    resource: str | PathLike | Iterable[str | PathLike],
     pack_directory: str | PathLike | None = None,
 ) -> Generator[IO, None, None]:
     """Extract a specific file from a data pack
@@ -106,9 +106,11 @@ def file_from_data_pack(
     pack_name : str
         Which data pack you want (not case-sensitive, and after normalizing
         for spaces, underscores and dashes)
-    resource : Path
+    resource : path or list of paths
         The specific resource you want to extract, specified as a Path relative
-        to the pack root
+        to the pack root. If there are multiple locations this resource could be,
+        provide them as a list, and this method will check each in order until
+        one is found.
     pack_directory : path, optional
         The pack directory to search. If None is given, this method will look
         for a "packs" folder inside the current working directory.
@@ -123,16 +125,31 @@ def file_from_data_pack(
     KeyError
         If the pack or pack file cannot be found
     """
-    pack_root = get_data_pack(pack_name, pack_directory)
-    if pack_root.is_dir():
-        try:
-            with (pack_root / resource).open() as pack_file:
-                yield pack_file
-        except FileNotFoundError as not_here:
-            raise KeyError(not_here)
+    if isinstance(resource, (str, PathLike)):
+        locations = [resource]
     else:
-        with ZipFile(pack_root).open(str(resource)) as pack_file:
-            yield pack_file
+        locations = list(resource)
+    pack_root = get_data_pack(pack_name, pack_directory)
+    for location in locations:
+        if pack_root.is_dir():
+            try:
+                with (pack_root / location).open() as pack_file:
+                    yield pack_file
+                    break
+            except FileNotFoundError:
+                continue
+        else:
+            try:
+                with ZipFile(pack_root).open(str(location)) as pack_file:
+                    yield pack_file
+                    break
+            except KeyError:
+                continue
+    else:
+        raise KeyError(
+            "Could not find the requested resource in any of the provided locations."
+            "\nChecked:\n" + "\n".join((f" - {location}" for location in locations))
+        )
 
 
 def copy_data_from_existing_pack(
