@@ -11,6 +11,24 @@ from ._legacy import LegacyHeadSpec
 from .extract import file_from_data_pack
 
 
+def _function_dirs(parent_dir: Path) -> tuple[Path, ...]:
+    """Given a data pack namespace folder, which should be the parent of a
+    "function(s)" folder, return all possible functions folders
+
+    Parameters
+    ----------
+    parent_dir : Path
+        The directory that should contain a function(s) folder
+
+    Returns
+    -------
+    tuple of Paths
+        The possible function folders, with priority given to the one recognized
+        by the most recent Minecraft versions
+    """
+    return parent_dir / "function", parent_dir / "functions"
+
+
 def parse_wandering_trades(
     trade_path: str | PathLike | None = None,
 ) -> tuple[list[LegacyHeadSpec], list[str]]:
@@ -52,7 +70,10 @@ def parse_wandering_trades(
     if trade_path is None:
         with file_from_data_pack(
             "wandering trades hermit edition",
-            Path("data") / "wandering_trades" / "functions" / HEAD_TRADE_FILENAME,
+            (
+                function_folder / HEAD_TRADE_FILENAME
+                for function_folder in _function_dirs(Path("data") / "wandering_trades")
+            ),
         ) as trade_file:
             return _parse_wandering_trades(trade_file)
     else:
