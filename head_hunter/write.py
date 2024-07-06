@@ -5,7 +5,8 @@ from os import PathLike
 from pathlib import Path
 from typing import Iterable
 
-from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER, HeadSpec
+from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER
+from ._kegacy import LegacyHeadSpec
 
 META_FILES = (
     "pack.mcmeta",
@@ -82,7 +83,7 @@ def _write_meta_file(template_file: Path, version: str) -> None:
 
 
 def write_head_trades(
-    trades: Iterable[HeadSpec],
+    trades: Iterable[LegacyHeadSpec],
     price: tuple[str, int] | None = None,
     purchase_limit: int = 3,
     xp_bonus: int = 0,
