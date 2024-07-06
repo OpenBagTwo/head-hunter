@@ -6,13 +6,14 @@ from os import PathLike
 from pathlib import Path
 from typing import IO
 
-from . import HEAD_TRADE_FILENAME, HeadSpec
+from . import HEAD_TRADE_FILENAME
+from ._kegacy import LegacyHeadSpec
 from .extract import file_from_data_pack
 
 
 def parse_wandering_trades(
     trade_path: str | PathLike | None = None,
-) -> tuple[list[HeadSpec], list[str]]:
+) -> tuple[list[LegacyHeadSpec], list[str]]:
     """Parse an existing trade list
 
     Parameters
@@ -59,8 +60,8 @@ def parse_wandering_trades(
             return _parse_wandering_trades(trade_file)
 
 
-def _parse_wandering_trades(trade_file: IO) -> tuple[list[HeadSpec], list[str]]:
-    player_head_trades: list[HeadSpec] = []
+def _parse_wandering_trades(trade_file: IO) -> tuple[list[LegacyHeadSpec], list[str]]:
+    player_head_trades: list[LegacyHeadSpec] = []
     block_trades: list[str] = []
     for line_num, line in enumerate(trade_file.readlines()):
         if isinstance(line, bytes):
@@ -98,7 +99,7 @@ def _parse_wandering_trades(trade_file: IO) -> tuple[list[HeadSpec], list[str]]:
             # try legacy spec
             if re.match(r"^SkullOwner:\w*$", player_head_spec):
                 player_name = player_head_spec.split(":")[1]
-                player_head_trades.append(HeadSpec.from_username(player_name))
+                player_head_trades.append(LegacyHeadSpec.from_username(player_name))
                 continue
             raise RuntimeError(parse_fail_message)
         player_name = match.group(0)[5:-1]
@@ -108,12 +109,12 @@ def _parse_wandering_trades(trade_file: IO) -> tuple[list[HeadSpec], list[str]]:
         if match:
             player_name = match.group(1)
 
-        player_head_trades.append(HeadSpec(player_name, skull_spec))
+        player_head_trades.append(LegacyHeadSpec(player_name, skull_spec))
 
     return player_head_trades, block_trades
 
 
-def parse_mob_heads(mob: str | PathLike) -> list[HeadSpec]:
+def parse_mob_heads(mob: str | PathLike) -> list[LegacyHeadSpec]:
     """Extract head specs from a "More Mob Heads" data pack loot table.
 
     Parameters
@@ -167,7 +168,7 @@ def parse_mob_heads(mob: str | PathLike) -> list[HeadSpec]:
         return _parse_mob_heads(mob_file)
 
 
-def _parse_mob_heads(mob_file: IO) -> list[HeadSpec]:
+def _parse_mob_heads(mob_file: IO) -> list[LegacyHeadSpec]:
     loot_table = json.load(mob_file)
     head_drops: list[dict] = []
     for pool in loot_table["pools"]:
@@ -179,7 +180,7 @@ def _parse_mob_heads(mob_file: IO) -> list[HeadSpec]:
             if entry.get("name", "") == "minecraft:player_head":
                 head_drops.append(entry)
 
-    head_specs: list[HeadSpec] = []
+    head_specs: list[LegacyHeadSpec] = []
     for drop in head_drops:
         for head_function in drop["functions"]:
             head_spec = head_function["tag"]
@@ -189,12 +190,12 @@ def _parse_mob_heads(mob_file: IO) -> list[HeadSpec]:
                 raise RuntimeError(parse_fail_message)
             else:
                 name = match.group(1)
-            head_specs.append(HeadSpec(name, head_spec[1:-1]))
+            head_specs.append(LegacyHeadSpec(name, head_spec[1:-1]))
 
     return head_specs
 
 
-def parse_give_command(command: str, name: str) -> HeadSpec:
+def parse_give_command(command: str, name: str) -> LegacyHeadSpec:
     """Parse a /give command (such as you'd find from a skin lookup site) to
     extract just the relevant specification that needs to go into the head-list
 
@@ -218,6 +219,6 @@ def parse_give_command(command: str, name: str) -> HeadSpec:
     match = re.search(r"(?:(SkullOwner:.*?)(?:,display:|}$))", command.strip())
     if not match:
         raise ValueError("Could not parse command")
-    return HeadSpec(
+    return LegacyHeadSpec(
         name, r'display:{Name:"{\"text\":\"' + name + r'\"}"},' + match.group(1)
     )
