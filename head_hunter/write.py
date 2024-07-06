@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Iterable
 
 from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER
-from ._kegacy import LegacyHeadSpec
+from ._legacy import LegacyHeadSpec
 
 META_FILES = (
     "pack.mcmeta",
