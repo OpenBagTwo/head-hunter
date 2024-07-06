@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import IO
 
 from . import HEAD_TRADE_FILENAME
-from ._kegacy import LegacyHeadSpec
+from ._legacy import LegacyHeadSpec
 from .extract import file_from_data_pack
 
 
