@@ -3,6 +3,31 @@
 import re
 from typing import Iterable, NamedTuple
 
+_FORMATTING_CODES = (
+    ("§0", "black"),
+    ("§1", "dark_blue"),
+    ("§2", "dark_green"),
+    ("§3", "dark_aqua"),
+    ("§4", "dark_red"),
+    ("§5", "dark_purple"),
+    ("§6", "gold"),
+    ("§7", "gray"),
+    ("§8", "dark_gray"),
+    ("§9", "blue"),
+    ("§a", "green"),
+    ("§b", "aqua"),
+    ("§c", "red"),
+    ("§d", "light_purple"),
+    ("§e", "yellow"),
+    ("§f", "white"),
+    ("§k", "obfuscated"),
+    ("§l", "bold"),
+    ("§m", "strikethrough"),
+    ("§n", "underlined"),
+    ("§o", "italic"),
+    ("§r", "reset"),
+)
+
 
 class LegacyHeadSpec(NamedTuple):
     """Original specification of a player head
@@ -59,42 +84,6 @@ class LegacyHeadSpec(NamedTuple):
         if self.comment:
             representation += f",comment={self.comment}"
         return representation + ")"
-
-    def dumps(self) -> str:
-        """Reference serialization method. Feel free to write your own.
-
-        Returns
-        -------
-        str
-            1-3 lines specifying the head spec in a concise and standard format
-        """
-        if self.comment is None:
-            header = repr(self)[len("HeadSpec(") : -1]
-        else:
-            header = self.comment
-        writeme = [header, self.name, self.skull_owner]
-        if header == self.name:
-            del writeme[1]
-            if header == self.skull_owner:
-                del writeme[1]
-        return "\n".join(writeme)
-
-
-def dumps(heads: Iterable[LegacyHeadSpec]) -> str:
-    """Serialize a list of HeadSpecs so they can be written to file
-
-    Parameters
-    ----------
-    heads : list of LegacyHeadSpec
-        The heads to serialize
-
-    Returns
-    -------
-    str
-        A series of 1-3-line sections, separated by blank lines, that specify
-        each head in a concise and standard format
-    """
-    return "\n\n".join([head.dumps() for head in heads])
 
 
 def loads(headlist: str | bytes) -> list[LegacyHeadSpec]:
