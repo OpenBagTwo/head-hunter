@@ -1,5 +1,6 @@
 """Functionality for abstracting and serializing player heads"""
 
+import re
 from typing import Iterable, NamedTuple
 
 _RARITY_COLORS = (
@@ -78,6 +79,8 @@ class HeadSpec(NamedTuple):
         LegacyHeadSpec
             The corresponding head spec
         """
+        if not re.match(r"^[A-Za-z0-9_]{3,16}$", name):
+            raise ValueError(f"{repr(name)} is not a valid Minecraft username")
         return cls(name, name)
 
     def __str__(self):
