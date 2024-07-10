@@ -120,13 +120,13 @@ class HeadSpec(NamedTuple):
             writeme.append(spec)
         return "\n".join(writeme)
 
-    def to_player_head(self, version: int = 48) -> str:
+    def to_player_head(self, pack_format: int = 48) -> str:
         """Generate the player head specification for use in commands and
         datapacks
 
         Parameters
         ----------
-        version : int, optional
+        pack_format : int, optional
             The data pack version
             (see: https://minecraft.wiki/w/Data_pack#Pack_format).
             Default is 48 for Minecraft 1.21
@@ -138,11 +138,11 @@ class HeadSpec(NamedTuple):
             `/give @s minecraft:player_head[{HeadSpec.to_player_head()}]`
             should give you the desired head
         """
-        if version >= 41:
+        if pack_format >= 41:
             return self._to_v41()
-        if version >= 4:
+        if pack_format >= 4:
             return self._to_v4()
-        raise NotImplementedError(f"Data pack version {version} is not supported.")
+        raise NotImplementedError(f"Data pack version {pack_format} is not supported.")
 
     def _to_v41(self) -> str:
         components: list[str] = [

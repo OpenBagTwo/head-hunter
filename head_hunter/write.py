@@ -8,8 +8,6 @@ from typing import Iterable
 from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER
 from ._legacy import LegacyHeadSpec
 
-SUPPORTED_PACK_FORMATS = (48, 15)
-
 META_FILES = (
     "pack.mcmeta",
     "data/vanillatweaks/advancements/wandering_trades.json",
@@ -17,11 +15,13 @@ META_FILES = (
 
 START_AT = 2
 
+_NAMESPACE_DIR = PACK_FOLDER / "data" / "wandering_trades"
+
 
 def write_meta_files(
     *template_paths: str | PathLike,
     version: str | None = None,
-    legacy: bool = False,
+    pack_format: int = 48,
 ) -> None:
     """Write a metadata file (or files), using the template in the templates
     folder (or one(s) you brought yourself)
@@ -34,10 +34,11 @@ def write_meta_files(
     version : str, optional
         The version to give to the pack. If None is provided, one will
         be generated based on the current date (calver).
-    legacy : bool, optional
-        By default, this function will generate a datapack compatible with
-        Minecraft 1.21 and above. To instead write for Minecraft 1.20.4
-        and below, pass in `legacy=True`.
+    pack_format : int, optional
+        By default, this function will create meta files indicating that the pack
+        is written for  Minecraft 1.21 and above. To instead set for compatibility
+        with an older version of Minecraft, pass the pack format version here
+        (see: https://minecraft.wiki/w/Data_pack#Pack_format).
 
     Returns
     -------
@@ -47,7 +48,6 @@ def write_meta_files(
     -----
     - The list of supported metadata files is hard-coded in this module as
       `META_FILES`.
-    - This method does not support generating datapacks for Minecraft 1.20.5/6
 
     Raises
     ------
@@ -62,7 +62,6 @@ def write_meta_files(
     """
     if version is None:
         version = dt.date.today().strftime("v%Y.%m.%d")
-    pack_format = SUPPORTED_PACK_FORMATS[1] if legacy else SUPPORTED_PACK_FORMATS[0]
 
     if not template_paths:
         # TODO: replace this with some proper importlib resources
@@ -98,6 +97,7 @@ def write_head_trades(
     price: tuple[str, int] | None = None,
     purchase_limit: int = 3,
     xp_bonus: int = 0,
+    pack_format: int = 48,
 ) -> tuple[int, int]:
     """Render the `add_trade.mcfunction` file that will give the
     Wandering Trader a specified list of head trades
@@ -116,14 +116,19 @@ def write_head_trades(
         /give @s minecraft:player_head{full_spec}
         ```
         would give you that head
-    price: tuple of (str, int), optional
+    price : tuple of (str, int), optional
         The price of a head, structured in the form (item, quantity).
         Default price is one emerald.
-    purchase_limit: int, optional
+    purchase_limit : int, optional
         The number of each head you can buy per trader. Default is 3.
-    xp_bonus: int, optional
+    xp_bonus : int, optional
         The amount of XP you get from buying a player head. Default behavior
         is that buying player heads does not award experience.
+    pack_format : int, optional
+        By default, this function will generate function files compatible with
+        Minecraft 1.21 and above. To instead wreite the function for an older
+        version of Minecraft, pass the pack format version here
+        (see: https://minecraft.wiki/w/Data_pack#Pack_format).
 
     Returns
     -------
@@ -140,16 +145,20 @@ def write_head_trades(
     Raises
     ------
     FileNotFoundError
-        If the pack folder or functions subdirectory doesn't exist
+        If the pack folder or function(s) subdirectory doesn't exist
         (meaning you haven't downloaded the base data pack or that the file
         structure is corrupted
     PermissionError
         If you don't have the ability to write to the pack folder
+    NotImplementedError
+        If the specified `pack_format` is not supported.
     """
     if price is None:
         price = ('"minecraft:emerald"', 1)
 
     template_path = Path(__file__).parent / "templates" / "add_trade.mcfunction"
+
+    function_dir = _NAMESPACE_DIR / ("function" if pack_format >= 48 else "functions")
 
     with open(template_path) as template_file:
         template = template_file.readlines()
@@ -182,12 +191,22 @@ def write_head_trades(
         ).replace("HEAD_SPEC", head.spec)
         commands.append(command)
 
-    trade_file_path = (
-        PACK_FOLDER / "data" / "wandering_trades" / "functions" / HEAD_TRADE_FILENAME
-    )
+    trade_file_path = function_dir / HEAD_TRADE_FILENAME
 
     trade_file_path.write_text("".join([*header, *commands]))
     return START_AT, trade_index
+
+
+def _function_dir() -> Path:
+    """Get the existing function directory"""
+    function_dir = _NAMESPACE_DIR / "function"
+    if not function_dir.exists():
+        function_dir = _NAMESPACE_DIR / "functions"
+    if not function_dir.exists():
+        raise FileNotFoundError(
+            f"No function / functions directory exists within {_NAMESPACE_DIR}"
+        )
+    return function_dir
 
 
 def write_block_trades(
@@ -219,11 +238,21 @@ def write_block_trades(
     Raises
     ------
     FileNotFoundError
-        If the pack folder or functions subdirectory doesn't exist
+        If the pack folder or function(s) subdirectory doesn't exist
         (meaning you haven't downloaded the base data pack or that the file
-        structure is corrupted
+        structure is corrupted. See Notes.
     PermissionError
         If you don't have the ability to write to the pack folder
+
+    Notes
+    -----
+    - This method will not convert block trades between versions, so make sure
+      that your "donor" pack is of the target Minecraft version.
+    - This method expects that the donor pack is set up with a single "function(s)"
+      directory. It will first try writing to the "function" folder and won't check
+      if "functions" exists unless "function" does not. If, for some reason, you
+      have _both_ folders in your data pack, this will likely cause undesired
+      behavior.
     """
     template_path = Path(__file__).parent / "templates" / "add_trade.mcfunction"
 
@@ -236,9 +265,7 @@ def write_block_trades(
         .replace("PROVIDER", "provide_block_trades.mcfunction")
     )
 
-    trade_file_path = (
-        PACK_FOLDER / "data" / "wandering_trades" / "functions" / BLOCK_TRADE_FILENAME
-    )
+    trade_file_path = _function_dir() / BLOCK_TRADE_FILENAME
 
     # see comment in write_head_trades about why we do this
     trade_index = start_at - 1
@@ -280,23 +307,22 @@ def update_trade_count(
         If you don't have the ability to write to the trade file
     ValueError
         If the trade provider file could not be properly munged
+
+    Notes
+    -----
+    - This method will not convert the function file between versions, so make sure
+      that your "donor" pack is of the target Minecraft version.
+    - This method expects that the donor pack is set up with a single "function(s)"
+      directory. It will first try modifying the "function" folder and won't check
+      if "functions" exists unless "function" does not. If, for some reason, you
+      have _both_ folders in your data pack, this will likely cause undesired
+      behavior.
     """
+    function_dir = _function_dir()
     if trade_provider in ("head", "heads", "hermit", "hermits"):
-        trade_provider_file = (
-            PACK_FOLDER
-            / "data"
-            / "wandering_trades"
-            / "functions"
-            / "provide_hermit_trades.mcfunction"
-        )
+        trade_provider_file = function_dir / "provide_hermit_trades.mcfunction"
     elif trade_provider in ("block", "blocks"):
-        trade_provider_file = (
-            PACK_FOLDER
-            / "data"
-            / "wandering_trades"
-            / "functions"
-            / "provide_block_trades.mcfunction"
-        )
+        trade_provider_file = function_dir / "provide_block_trades.mcfunction"
     else:
         trade_provider_file = Path(trade_provider)
 
@@ -337,15 +363,32 @@ def patch_block_trades_out_of_tick_function(
 
     Parameters
     ----------
-    tick_function_path : path, optional
+    tick_function_path : path-like, optional
         The file to update (in case it's in a weird place). If None is provided,
         this method will look for "tick.mcfunction" within the default pack
         folder.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the destination trade provider file doesn't exist
+    PermissionError
+        If you don't have the ability to write to the trade file
+    ValueError
+        If the trade provider file could not be properly munged
+
+    Notes
+    -----
+    - This method will not convert the function file between versions, so make sure
+      that your "donor" pack is of the target Minecraft version.
+    - This method expects that the donor pack is set up with a single "function(s)"
+      directory. It will first try modifying the "function" folder and won't check
+      if "functions" exists unless "function" does not. If, for some reason, you
+      have _both_ folders in your data pack, this will likely cause undesired
+      behavior.
     """
     if tick_function_path is None:
-        tick_function_path = (
-            PACK_FOLDER / "data" / "wandering_trades" / "functions" / "tick.mcfunction"
-        )
+        tick_function_path = _function_dir() / "tick.mcfunction"
 
     commands = Path(tick_function_path).read_text().splitlines()
 
@@ -385,15 +428,28 @@ def patch_block_trade_provider_function(
         The file to update (in case it's in a weird place). If None is provided,
         this method will look for "provide_block_trades.mcfunction" within
         the default pack folder.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the destination trade provider file doesn't exist
+    PermissionError
+        If you don't have the ability to write to the trade file
+    ValueError
+        If the trade provider file could not be properly munged
+
+    Notes
+    -----
+    - This method will not convert the function file between versions, so make sure
+      that your "donor" pack is of the target Minecraft version.
+    - This method expects that the donor pack is set up with a single "function(s)"
+      directory. It will first try modifying the "function" folder and won't check
+      if "functions" exists unless "function" does not. If, for some reason, you
+      have _both_ folders in your data pack, this will likely cause undesired
+      behavior.
     """
     if provider_function_path is None:
-        provider_function_path = (
-            PACK_FOLDER
-            / "data"
-            / "wandering_trades"
-            / "functions"
-            / "provide_block_trades.mcfunction"
-        )
+        provider_function_path = _function_dir() / "provide_block_trades.mcfunction"
 
     provider = Path(provider_function_path).read_text()
     Path(provider_function_path).write_text(
