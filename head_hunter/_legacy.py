@@ -4,22 +4,22 @@ import re
 from typing import Iterable, NamedTuple
 
 _FORMATTING_CODES = (
-    ("§0", "black"),
-    ("§1", "dark_blue"),
-    ("§2", "dark_green"),
-    ("§3", "dark_aqua"),
-    ("§4", "dark_red"),
-    ("§5", "dark_purple"),
-    ("§6", "gold"),
-    ("§7", "gray"),
-    ("§8", "dark_gray"),
-    ("§9", "blue"),
-    ("§a", "green"),
-    ("§b", "aqua"),
-    ("§c", "red"),
-    ("§d", "light_purple"),
-    ("§e", "yellow"),
-    ("§f", "white"),
+    ("§0", "c*black"),
+    ("§1", "c*dark_blue"),
+    ("§2", "c*dark_green"),
+    ("§3", "c*dark_aqua"),
+    ("§4", "c*dark_red"),
+    ("§5", "c*dark_purple"),
+    ("§6", "c*gold"),
+    ("§7", "c*gray"),
+    ("§8", "c*dark_gray"),
+    ("§9", "c*blue"),
+    ("§a", "c*green"),
+    ("§b", "c*aqua"),
+    ("§c", "c*red"),
+    ("§d", "c*light_purple"),
+    ("§e", "c*yellow"),
+    ("§f", "c*white"),
     ("§k", "obfuscated"),
     ("§l", "bold"),
     ("§m", "strikethrough"),
@@ -112,3 +112,37 @@ def loads(headlist: str | bytes) -> list[LegacyHeadSpec]:
         else:
             heads.append(LegacyHeadSpec(lines[1], lines[2], comment=lines[0]))
     return heads
+
+
+def convert_format_codes_to_format_flags(name_str: str) -> dict[str, str | bool]:
+    """Given a string containing formatting codes
+    (see: https://minecraft.wiki/w/Formatting_codes), output the corresponding
+    formatting flags
+
+    Parameters
+    ----------
+    name_str : str
+        A string containing formatting codes (any other characters will
+        be ignored)
+
+    Returns
+    -------
+    dict
+        The recognized formatting codes
+    """
+    lookup = dict(_FORMATTING_CODES)
+    flags: dict[str, str | bool] = {}
+    for modifier in (name_str[i : i + 2] for i in range(len(name_str) - 1)):
+        try:
+            flag = lookup[modifier]
+        except KeyError:
+            continue  # probably means the string is invalid. # TODO: maybe warn?
+        if flag[:2] == "c*":
+            flags["color"] = flag[2:]
+        elif flag == "reset":
+            if not flags:  # this is expected
+                continue
+            # TODO: warn that this is probably not going to behave right?
+        else:
+            flags[flag] = True
+    return flags
