@@ -4,10 +4,10 @@ import json
 import re
 from os import PathLike
 from pathlib import Path
-from typing import IO
+from typing import IO, Any
 
-from . import HEAD_TRADE_FILENAME
-from ._legacy import LegacyHeadSpec
+from . import HEAD_TRADE_FILENAME, HeadSpec
+from ._legacy import LegacyHeadSpec, convert_format_codes_to_format_flags
 from .extract import file_from_data_pack
 
 
@@ -31,7 +31,7 @@ def _function_dirs(parent_dir: Path) -> tuple[Path, ...]:
 
 def parse_wandering_trades(
     trade_path: str | PathLike | None = None,
-) -> tuple[list[LegacyHeadSpec], list[str]]:
+) -> tuple[list[HeadSpec], list[str]]:
     """Parse an existing trade list
 
     Parameters
@@ -81,8 +81,8 @@ def parse_wandering_trades(
             return _parse_wandering_trades(trade_file)
 
 
-def _parse_wandering_trades(trade_file: IO) -> tuple[list[LegacyHeadSpec], list[str]]:
-    player_head_trades: list[LegacyHeadSpec] = []
+def _parse_wandering_trades(trade_file: IO) -> tuple[list[HeadSpec], list[str]]:
+    player_head_trades: list[HeadSpec] = []
     block_trades: list[str] = []
     for line_num, line in enumerate(trade_file.readlines()):
         if isinstance(line, bytes):
@@ -100,39 +100,115 @@ def _parse_wandering_trades(trade_file: IO) -> tuple[list[LegacyHeadSpec], list[
             # not selling a player head, so ignore
             continue
 
-        if 'buyB:{id:"minecraft:air"' not in command:
+        if 'buyB:{id:"minecraft:air"' not in command and "buyB:{id:" in command:
             # then it's a block trade
-            match = re.search(r"(?:wt_tradeIndex matches ([0-9]*) run)", command)
-            if not match:
+            matched = re.search(r"(?:wt_tradeIndex matches ([0-9]*) run)", command)
+            if not matched:
                 raise RuntimeError(parse_fail_message)
-            span = match.span(1)
+            span = matched.span(1)
             block_trades.append(command[: span[0]] + "IDX" + command[span[1] :])
             continue
 
         # this is brittle generally, but depth matching is probably YAGNI
-        match = re.search(r"tag:{.*}}}", command)
-        if not match:
+        matched = re.search(r"(components|tag):({.*)}}", command)
+        if not matched:
             raise RuntimeError(parse_fail_message)
-        player_head_spec = match.group(0)[5:-3]
+        try:
+            match matched.group(1):
+                case "components":
+                    head_spec = _parse_head_from_trade(matched.group(2))
+                case "tag":
+                    head_spec = _parse_head_from_legacy_trade(matched.group(2))
+                case _:  # pragma: no cover
+                    # this should never happen
+                    raise RuntimeError(parse_fail_message)
+        except (ValueError, NotImplementedError) as parse_fail:
+            raise RuntimeError(parse_fail_message) from parse_fail
 
-        match = re.search(r"Name:.*?,", player_head_spec)
-        if not match:
-            # try legacy spec
-            if re.match(r"^SkullOwner:\w*$", player_head_spec):
-                player_name = player_head_spec.split(":")[1]
-                player_head_trades.append(LegacyHeadSpec.from_username(player_name))
-                continue
-            raise RuntimeError(parse_fail_message)
-        player_name = match.group(0)[5:-1]
-        skull_spec = player_head_spec[match.span()[1] :]
-
-        match = re.search(r'(?:\\"text\\":(?:\\"|)(.*?)(?:\\"|)}")', player_name)
-        if match:
-            player_name = match.group(1)
-
-        player_head_trades.append(LegacyHeadSpec(player_name, skull_spec))
+        player_head_trades.append(head_spec)
 
     return player_head_trades, block_trades
+
+
+def _parse_head_from_trade(head_str: str) -> HeadSpec:
+    try:
+        parsed = json.loads(
+            head_str.replace("properties:", '"properties":')
+            .replace("name:", '"name":')
+            .replace("value:", '"value":')
+            .replace("'\"", '"\\"')
+            .replace("\"'", '\\""')
+        )
+    except json.JSONDecodeError as parse_fail:
+        raise ValueError(parse_fail)
+
+    as_dict: dict[str, Any] = {}
+
+    match parsed["minecraft:item_name"]:
+        case dict():
+            raise NotImplementedError("Can't yet parse formatted item names")
+        case str():
+            name = parsed["minecraft:item_name"]
+            if name.startswith('"') and name.endswith('"'):
+                name = name[1:-1]
+            as_dict["name"] = name
+        case _:
+            raise ValueError(f"Could not parse display name of head from {head_str}")
+
+    try:
+        as_dict["rarity"] = parsed["minecraft:rarity"]
+    except KeyError:
+        pass
+
+    try:
+        match parsed["minecraft:profile"]:
+            case str():
+                as_dict["player_name"] = parsed["minecraft:profile"]
+            case dict():
+                try:
+                    as_dict["player_name"] = parsed["minecraft:profile"]["name"]
+                except KeyError:
+                    pass
+                try:
+                    as_dict["texture"] = parsed["minecraft:profile"]["properties"][0][
+                        "value"
+                    ]
+                except KeyError:
+                    pass
+                except IndexError:
+                    raise ValueError(f"Could not parse texture from {head_str}")
+    except KeyError:
+        # TODO: warn that there's no head set?
+        pass
+
+    return HeadSpec(**as_dict)
+
+
+def _parse_head_from_legacy_trade(head_str: str) -> HeadSpec:
+    if (
+        matched := re.search(
+            r'{Name:\\?"{\\?"text\\?":\\?"(.*?)\\?"}\\?"},SkullOwner:(.*)}', head_str
+        )
+    ) is None:
+        raise ValueError(
+            "Could not identify display name and/or skull owner from\n" + head_str
+        )
+
+    name = matched.group(1)
+    as_dict: dict[str, Any] = convert_format_codes_to_format_flags(name)
+    as_dict["name"] = re.sub(r'\\?"|\xA7.|}', "", name)
+    skull_str = matched.group(2)
+
+    if texture_match := re.search(
+        r'Properties:{textures:\[{Value:"([A-Za-z0-9=]*)"}\]}', skull_str
+    ):
+        as_dict["texture"] = texture_match.group(0)
+    elif re.match(r"^[A-Za-z0-9_]{3,16}$", skull_str):
+        as_dict["player_name"] = skull_str
+    else:
+        raise ValueError(f"Could not parse skull owner: {skull_str}")
+
+    return HeadSpec(**as_dict)
 
 
 def parse_mob_heads(mob: str | PathLike) -> list[LegacyHeadSpec]:
