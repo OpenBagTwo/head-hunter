@@ -88,6 +88,7 @@ def get_data_pack(pack_name: str, pack_directory: str | PathLike | None = None) 
         message = f"Multiple packs match {pack_pattern}:"
         for pack in matches:
             message += f"\n - {pack}"
+        message += f"\n\nExtracting: {matches[-1]}"
         warnings.warn(message, RuntimeWarning)
 
     return matches[-1]
