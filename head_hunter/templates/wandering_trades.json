@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "minecraft:crossbow"
+            "ICON_KEY": "minecraft:crossbow"
         },
         "title": "Wandering Head Hunter    ",
         "description": [
