@@ -373,67 +373,6 @@ def update_trade_count(
     Path(trade_provider_file).write_text("\n".join(write_me))
 
 
-def patch_block_trades_out_of_tick_function(
-    tick_function_path: str | PathLike | None = None,
-) -> None:
-    """If you're not looking to keep the block trades, then this method removes
-    all reference to them from `tick.mcfunction`
-
-    Parameters
-    ----------
-    tick_function_path : path-like, optional
-        The file to update (in case it's in a weird place). If None is provided,
-        this method will look for "tick.mcfunction" within the default pack
-        folder.
-
-    Raises
-    ------
-    FileNotFoundError
-        If the destination trade provider file doesn't exist
-    PermissionError
-        If you don't have the ability to write to the trade file
-    ValueError
-        If the trade provider file could not be properly munged
-
-    Notes
-    -----
-    - This method will not convert the function file between versions, so make sure
-      that your "donor" pack is of the target Minecraft version.
-    - This method expects that the donor pack is set up with a single "function(s)"
-      directory. It will first try modifying the "function" folder and won't check
-      if "functions" exists unless "function" does not. If, for some reason, you
-      have _both_ folders in your data pack, this will likely cause undesired
-      behavior.
-    """
-    if tick_function_path is None:
-        tick_function_path = _function_dir() / "tick.mcfunction"
-
-    commands = Path(tick_function_path).read_text().splitlines()
-
-    write_me: list[str] = []
-    for command in commands:
-        if (
-            "!has_new_block_trades" in command
-            or command.strip() == "# Amount of block trades"
-        ):
-            continue
-        if command.strip().endswith(
-            "run function wandering_trades:provide_hermit_trades"
-        ):
-            write_me.append(
-                "execute as"
-                " @e[type=minecraft:wandering_trader,tag=!has_new_hermit_trades]"
-                " at @s run function wandering_trades:provide_hermit_trades"
-            )
-        else:
-            write_me.append(command)
-
-    if write_me[-1] != "":
-        write_me.append("")  # always good to end with a newline
-
-    Path(tick_function_path).write_text("\n".join(write_me))
-
-
 def patch_block_trade_provider_function(
     provider_function_path: str | PathLike | None = None,
 ) -> None:
