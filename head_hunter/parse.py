@@ -131,48 +131,59 @@ def _parse_wandering_trades(trade_file: IO) -> tuple[list[HeadSpec], list[str]]:
 
 
 def _parse_head_from_trade(head_str: str) -> HeadSpec:
-    try:
-        parsed = json.loads(
-            head_str.replace("properties:", '"properties":')
-            .replace("name:", '"name":')
-            .replace("value:", '"value":')
-            .replace("'\"", '"\\"')
-            .replace("\"'", '\\""')
+    for component in (
+        "item_name",
+        "profile",
+        "properties",
+        "rarity",
+        "note_block_sound",
+    ):
+        head_str = (
+            head_str.replace(f"minecraft:{component}:", f'"{component}":')
+            .replace(f"{component}:", f'"{component}":')
+            .replace(f'"minecraft:{component}":', f'"{component}":')
         )
+    head_str = (
+        head_str.replace("name:", '"name":')
+        .replace("value:", '"value":')
+        .replace("'\"", '"\\"')
+        .replace("\"'", '\\""')
+        .replace("'{", "{")
+        .replace("}'", "}")
+    )
+
+    try:
+        parsed = json.loads(head_str)
     except json.JSONDecodeError as parse_fail:
-        raise ValueError(parse_fail)
+        raise ValueError(f"{head_str}\nis not valid JSON") from parse_fail
 
     as_dict: dict[str, Any] = {}
 
-    match parsed["minecraft:item_name"]:
+    match parsed["item_name"]:
         case dict():
-            raise NotImplementedError("Can't yet parse formatted item names")
+            as_dict["name"] = parsed["item_name"].pop("text")
+            as_dict.update(parsed["item_name"])
         case str():
-            name = parsed["minecraft:item_name"]
-            if name.startswith('"') and name.endswith('"'):
-                name = name[1:-1]
-            as_dict["name"] = name
+            as_dict["name"] = json.loads(parsed["item_name"])
         case _:
             raise ValueError(f"Could not parse display name of head from {head_str}")
 
     try:
-        as_dict["rarity"] = parsed["minecraft:rarity"]
+        as_dict["rarity"] = parsed["rarity"]
     except KeyError:
         pass
 
     try:
-        match parsed["minecraft:profile"]:
+        match parsed["profile"]:
             case str():
-                as_dict["player_name"] = parsed["minecraft:profile"]
+                as_dict["player_name"] = parsed["profile"]
             case dict():
                 try:
-                    as_dict["player_name"] = parsed["minecraft:profile"]["name"]
+                    as_dict["player_name"] = parsed["profile"]["name"]
                 except KeyError:
                     pass
                 try:
-                    as_dict["texture"] = parsed["minecraft:profile"]["properties"][0][
-                        "value"
-                    ]
+                    as_dict["texture"] = parsed["profile"]["properties"][0]["value"]
                 except KeyError:
                     pass
                 except IndexError:
@@ -260,11 +271,16 @@ def parse_mob_heads(mob: str | PathLike) -> list[HeadSpec]:
             raise oops
 
     # now check if it's the mob name
-    for namespace in ("more_mob_heads", "minecraft"):
+
+    for namespace, loot_table_dir in (
+        ("more_mob_heads", "loot_table"),
+        ("minecraft", "loot_table"),
+        ("minecraft", "loot_tables"),
+    ):
         try:
             with file_from_data_pack(
                 "more mob heads",
-                Path("data") / namespace / "loot_tables" / "entities" / f"{mob}.json",
+                Path("data") / namespace / loot_table_dir / "entities" / f"{mob}.json",
             ) as mob_file:
                 return _parse_mob_heads(mob_file)
         except KeyError:

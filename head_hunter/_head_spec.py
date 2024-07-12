@@ -127,7 +127,6 @@ class HeadSpec(NamedTuple):
 
     def to_player_head(self, pack_format: int = 48) -> str:
         """Generate the player head specification for use in commands and
-        datapacks
 
         Parameters
         ----------
@@ -140,8 +139,20 @@ class HeadSpec(NamedTuple):
         -------
         str
             The properly composited head specification, such that the command
-            `/give @s minecraft:player_head[{HeadSpec.to_player_head()}]`
-            should give you the desired head
+            `/give @s minecraft:player_head[head_spec]` (where `head_spec` is the
+            string returned by this method) should give you the desired head
+            in modern versions of the game (see note)
+
+        Notes
+        -----
+        - The proper `/give` command syntax for Minecraft versions before 1.20.5
+          (`pack_format < 41`) is `/give @s minecraft_player_head{head_spec}`
+          (where `head_spec` is the string returned by this method when using the
+          corresponding `pack_format`)
+        - This head specification should work in data packs as well for
+          `pack_format < 41`, but for modern versions of the game,
+          `HeadSpec.to_component_dict()` is the method to generate the
+          specification for use in a trade list.
         """
         if pack_format >= 41:
             return self._to_v41()
@@ -150,6 +161,35 @@ class HeadSpec(NamedTuple):
         if pack_format >= 4:
             return self._to_v4()
         raise NotImplementedError(f"Data pack version {pack_format} is not supported.")
+
+    def to_component_dict(self) -> str:
+        """Generate the player head specification for use in trade lists for
+        modern versions of the game (Minecraft 1.21 and above)
+
+        Returns
+        -------
+        str
+            The properly composited head specification suitable for including
+            in the `components` field of a data pack trade list
+
+        Notes
+        -----
+        This method is only meant for modern versions of the game (pack format
+        41 and above). For older datapacks, use
+        `HeadSpec.to_player_head(pack_format=desired_pack_format)`
+        """
+        head_spec = self.to_player_head()
+        for component in (
+            "item_name",
+            "profile",
+            "properties",
+            "rarity",
+            "note_block_sound",
+        ):
+            head_spec = head_spec.replace(
+                f"minecraft:{component}=", f'"minecraft:{component}":'
+            )
+        return head_spec
 
     def _to_v41(self) -> str:
         components: list[str] = [
@@ -170,7 +210,7 @@ class HeadSpec(NamedTuple):
         if self.rarity:
             components.append(f'minecraft:rarity="{self.rarity}"')
         if self.note_block_sound:
-            components.append(f'"minecraft:note_block_sound"="{self.note_block_sound}"')
+            components.append(f'minecraft:note_block_sound="{self.note_block_sound}"')
 
         # TODO
         # if self.lore:
