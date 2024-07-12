@@ -186,9 +186,14 @@ def write_head_trades(
     trade_index = START_AT - 1
 
     for head in trades:
+        head_spec = (
+            head.to_component_dict()
+            if pack_format >= 41
+            else head.to_player_head(pack_format=pack_format)
+        )
         command = command_template.replace(
             "IDX", str(trade_index := trade_index + 1)  # ++trade_index
-        ).replace("HEAD_SPEC", head.to_player_head(pack_format=pack_format))
+        ).replace("HEAD_SPEC", head_spec)
         commands.append(command)
 
     trade_file_path = function_dir / HEAD_TRADE_FILENAME
@@ -331,14 +336,28 @@ def update_trade_count(
     bound_idx = 0
     bounds = (lower_bound, upper_bound)
     write_me: list[str] = []
+
     for command in commands:
-        if command.startswith(f"scoreboard players set @s math_input{bound_idx + 1}"):
+        if command.startswith("execute store result score @s wt_tradeIndex"):
+            if bound_idx != 0:
+                raise ValueError(
+                    f"The structure of {trade_provider_file} is not recognized."
+                )
+            write_me.append(
+                f"execute store result score @s wt_tradeIndex"
+                f" run random value {lower_bound}..{upper_bound}"
+            )
+            bound_idx += 2
+        elif command.startswith(f"scoreboard players set @s math_input{bound_idx + 1}"):
             try:
                 write_me.append(
                     f"scoreboard players set @s math_input{bound_idx + 1} {bounds[bound_idx]}"
                 )
             except IndexError:
-                raise ValueError(f"Too many math_input variables found:\n {command}")
+                raise ValueError(
+                    f"Too many math_input variables found in {trade_provider_file}:\n"
+                    + command
+                )
 
             bound_idx += 1
         else:
