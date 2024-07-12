@@ -339,7 +339,7 @@ def _format_profile_v41(player_name: str | None, texture: str | None) -> str:
 
 def _format_profile_v4(player_name: str | None, texture: str | None) -> str:
     if texture:
-        return '{Properties:{textures:[{Value:"' + texture + '"}]}'
+        return '{Properties:{textures:[{Value:"' + texture + '"}]}}'
     if player_name:
         return player_name
     return ""
