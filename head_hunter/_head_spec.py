@@ -166,9 +166,9 @@ class HeadSpec(NamedTuple):
             + "'"
         ]
         if profile_spec := _format_profile_v41(self.player_name, self.texture):
-            components.append(f"profile={profile_spec}")
+            components.append(f"minecraft:profile={profile_spec}")
         if self.rarity:
-            components.append(f"minecraft:rarity={self.rarity}")
+            components.append(f'minecraft:rarity="{self.rarity}"')
         if self.note_block_sound:
             components.append(f'"minecraft:note_block_sound"="{self.note_block_sound}"')
 
@@ -287,10 +287,10 @@ def _format_profile_v41(player_name: str | None, texture: str | None) -> str:
     # but since it works, why not?
     profile_spec_components: list[str] = []
     if player_name:
-        profile_spec_components.append(f"name:{player_name}")
+        profile_spec_components.append(f'"name":"{player_name}"')
     if texture:
         profile_spec_components.append(
-            'properties:[{name:"textures", value:"' + texture + '"}]'
+            '"properties":[{"name":"textures", "value":"' + texture + '"}]'
         )
     if not profile_spec_components:
         return ""
