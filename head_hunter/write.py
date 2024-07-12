@@ -7,11 +7,6 @@ from typing import Iterable
 
 from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER, HeadSpec
 
-META_FILES = (
-    "pack.mcmeta",
-    "data/vanillatweaks/advancements/wandering_trades.json",
-)
-
 START_AT = 2
 
 _NAMESPACE_DIR = PACK_FOLDER / "data" / "wandering_trades"
@@ -76,14 +71,21 @@ def write_meta_files(
 def _write_meta_file(template_file: Path, version: str, pack_format: int) -> None:
     template = template_file.read_text()
 
-    mcmeta = template.replace("VERSION", version).replace(
-        "PACK_FORMAT", str(pack_format)
+    mcmeta = (
+        template.replace("VERSION", version)
+        .replace("PACK_FORMAT", str(pack_format))
+        .replace("ICON_KEY", "id" if pack_format >= 41 else "item")
     )
 
-    for file in META_FILES:
-        if file.split("/")[-1] == template_file.name:
-            destination = Path(file)
-            break
+    if template_file.name == "pack.mcmeta":
+        destination = Path("pack.mcmeta")
+    elif template_file.name == "wandering_trades.json":
+        destination = (
+            Path("data")
+            / "vanillatweaks"
+            / ("advancement" if pack_format >= 48 else "advancements")
+            / "wandering_trades.json"
+        )
     else:
         raise ValueError(f"Unrecognized template {template_file.name}")
 
