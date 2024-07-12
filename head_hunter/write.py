@@ -334,20 +334,17 @@ def update_trade_count(
     commands = trade_provider_file.read_text().splitlines()
 
     bound_idx = 0
+    randomizer_found = False
     bounds = (lower_bound, upper_bound)
     write_me: list[str] = []
 
     for command in commands:
         if command.startswith("execute store result score @s wt_tradeIndex"):
-            if bound_idx != 0:
-                raise ValueError(
-                    f"The structure of {trade_provider_file} is not recognized."
-                )
             write_me.append(
                 f"execute store result score @s wt_tradeIndex"
                 f" run random value {lower_bound}..{upper_bound}"
             )
-            bound_idx += 2
+            randomizer_found = True
         elif command.startswith(f"scoreboard players set @s math_input{bound_idx + 1}"):
             try:
                 write_me.append(
@@ -362,7 +359,7 @@ def update_trade_count(
             bound_idx += 1
         else:
             write_me.append(command)
-    if bound_idx < 2:
+    if bound_idx < 2 and not randomizer_found:
         raise ValueError(
             "Was not able to replace all of the bounds!"
             f"\n Number of bounds replaced: {bound_idx}"
