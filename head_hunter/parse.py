@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import IO, Any
 
 from . import HEAD_TRADE_FILENAME, HeadSpec
-from ._legacy import LegacyHeadSpec, convert_format_codes_to_format_flags
+from ._legacy import convert_format_codes_to_format_flags
 from .extract import file_from_data_pack
 
 
@@ -43,7 +43,7 @@ def parse_wandering_trades(
 
     Returns
     -------
-    list of NamedTuples
+    list of HeadSpec
         list of player-head specifications such that calling
         ```
         /give @s minecraft:player_head{head.spec}
@@ -181,6 +181,8 @@ def _parse_head_from_trade(head_str: str) -> HeadSpec:
         # TODO: warn that there's no head set?
         pass
 
+    # TODO: parse note block sound (YAGNI for the official data pack)
+
     return HeadSpec(**as_dict)
 
 
@@ -211,7 +213,7 @@ def _parse_head_from_legacy_trade(head_str: str) -> HeadSpec:
     return HeadSpec(**as_dict)
 
 
-def parse_mob_heads(mob: str | PathLike) -> list[LegacyHeadSpec]:
+def parse_mob_heads(mob: str | PathLike) -> list[HeadSpec]:
     """Extract head specs from a "More Mob Heads" data pack loot table.
 
     Parameters
@@ -227,7 +229,7 @@ def parse_mob_heads(mob: str | PathLike) -> list[LegacyHeadSpec]:
 
     Returns
     -------
-    List of NamedTuples
+    List of HeadSpec
         list of player-head specifications such that calling
         ```
         /give @s minecraft:player_head{head.spec}
@@ -258,14 +260,20 @@ def parse_mob_heads(mob: str | PathLike) -> list[LegacyHeadSpec]:
             raise oops
 
     # now check if it's the mob name
-    with file_from_data_pack(
-        "more mob heads",
-        Path("data") / "minecraft" / "loot_tables" / "entities" / f"{mob}.json",
-    ) as mob_file:
-        return _parse_mob_heads(mob_file)
+    for namespace in ("more_mob_heads", "minecraft"):
+        try:
+            with file_from_data_pack(
+                "more mob heads",
+                Path("data") / namespace / "loot_tables" / "entities" / f"{mob}.json",
+            ) as mob_file:
+                return _parse_mob_heads(mob_file)
+        except KeyError:
+            continue
+    else:
+        raise FileNotFoundError(f"Could not find a loot table for {mob}")
 
 
-def _parse_mob_heads(mob_file: IO) -> list[LegacyHeadSpec]:
+def _parse_mob_heads(mob_file: IO) -> list[HeadSpec]:
     loot_table = json.load(mob_file)
     head_drops: list[dict] = []
     for pool in loot_table["pools"]:
@@ -277,22 +285,46 @@ def _parse_mob_heads(mob_file: IO) -> list[LegacyHeadSpec]:
             if entry.get("name", "") == "minecraft:player_head":
                 head_drops.append(entry)
 
-    head_specs: list[LegacyHeadSpec] = []
+    head_specs: list[HeadSpec] = []
     for drop in head_drops:
         for head_function in drop["functions"]:
-            head_spec = head_function["tag"]
-            match = re.search(r'(?:Name:"(.*?)")', head_spec)
-            if not match:
-                parse_fail_message = f"Could not parse:\n {drop}"
-                raise RuntimeError(parse_fail_message)
+            if "components" in head_function:
+                head_dict = head_function["components"]
+                name = head_dict["minecraft:item_name"]
+                if name.startswith('"') and name.endswith('"'):
+                    name = name[1:-1]
+                head_specs.append(
+                    # keeping this to what I actually see in the data pack
+                    HeadSpec(
+                        name,
+                        texture=head_dict["minecraft:profile"]["properties"][0][
+                            "value"
+                        ],
+                        note_block_sound=head_dict.get("minecraft:note_block_sound"),
+                    )
+                )
             else:
-                name = match.group(1)
-            head_specs.append(LegacyHeadSpec(name, head_spec[1:-1]))
+                skull_str = head_function["tag"]
+                match = re.search(
+                    r'Name:"(.*?)".*Properties:{textures:\[{Value:"(.*?)"}\]}}'
+                    r'(?:,BlockEntityTag:{note_block_sound:"(.*)")?',
+                    skull_str,
+                )
+                if not match:
+                    parse_fail_message = f"Could not parse:\n {drop}"
+                    raise RuntimeError(parse_fail_message)
+                head_specs.append(
+                    HeadSpec(
+                        match.group(1),
+                        texture=match.group(1),
+                        note_block_sound=match.group(2),
+                    )
+                )
 
     return head_specs
 
 
-def parse_give_command(command: str, name: str) -> LegacyHeadSpec:
+def parse_give_command(command: str, name: str, **kwargs) -> HeadSpec:
     """Parse a /give command (such as you'd find from a skin lookup site) to
     extract just the relevant specification that needs to go into the head-list
 
@@ -301,11 +333,14 @@ def parse_give_command(command: str, name: str) -> LegacyHeadSpec:
     command : str
         The full `/give` command
     name : str
-        The name (with any fancy formatting) to give to the head
+        The display name to give to the head
+    **kwargs
+        Any customizations (color, formatting, note block sound) to give
+        to the head. See: `HeadSpec`
 
     Returns
     -------
-    NamedTuple
+    HeadSpec
         The tokenized head specification
 
     Raises
@@ -313,9 +348,41 @@ def parse_give_command(command: str, name: str) -> LegacyHeadSpec:
     ValueError
         If the command could not be parsed
     """
-    match = re.search(r"(?:(SkullOwner:.*?)(?:,display:|}$))", command.strip())
-    if not match:
-        raise ValueError("Could not parse command")
-    return LegacyHeadSpec(
-        name, r'display:{Name:"{\"text\":\"' + name + r'\"}"},' + match.group(1)
+    if "player_head[" in command:
+        base_head = _parse_give_v41(command)
+    elif "player_head{" in command:
+        base_head = _parse_give_v4(command)
+    else:
+        raise ValueError("Could not parse command:\n" + command)
+
+    return HeadSpec(name, **{base_head[0]: base_head[1]}, **kwargs)  # type: ignore
+
+
+def _parse_give_v41(command) -> tuple[str, str]:
+    if matched := re.search(
+        r'"?properties"?:\[{.*"?name"?:"textures","?value"?:"([A-Za-z0-9=]*)"', command
+    ):
+        return "texture", matched.group(1)
+    if matched := re.search(
+        r'profile=(?:{.*"?name"?:)?"?([A-Za-z0-9_]{3,16})"?', command
+    ):
+        return "player_name", matched.group(1)
+    raise ValueError(
+        "Could not parse player name or texture from command:\n"
+        + command
+        + "\n\nEither the command is invalid or the parser doesn't recognize its syntax."
+    )
+
+
+def _parse_give_v4(command) -> tuple[str, str]:
+    if matched := re.search(
+        r'Properties:{textures:\[{Value:"([A-Za-z0-9=]*)"', command
+    ):
+        return "texture", matched.group(1)
+    if matched := re.search(r'SkullOwner:"?([A-Za-z0-9_]{3,16})"?', command):
+        return "player_name", matched.group(1)
+    raise ValueError(
+        "Could not parse player name or texture from command:\n"
+        + command
+        + "\n\nEither the command is invalid or the parser doesn't recognize its syntax."
     )
