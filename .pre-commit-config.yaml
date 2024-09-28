@@ -14,6 +14,8 @@ repos:
   hooks:
   - id: mypy
     args: [--python-version=3.10, --ignore-missing-imports]
+    additional_dependencies:
+    - types-requests
 - repo: https://github.com/nbQA-dev/nbQA
   rev: 1.8.5
   hooks:
