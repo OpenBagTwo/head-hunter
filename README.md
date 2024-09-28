@@ -7,6 +7,17 @@ with your own personalized list of custom player heads.
 
 ## Installation and Setup
 
+This package is compatible with Python 3.10 or newer. The only dependency
+required outside the standard library is
+[Requests](https://requests.readthedocs.io/en/latest/user/install/#install),
+which is included by default in many distributions and which is readily
+available from most system package managers as `python-requests` (or
+`python3-requests` for Debian/Ubuntu). As a fallback, you can always install it
+via [pip](https://packaging.python.org/en/latest/tutorials/installing-packages/#use-pip-for-installing):
+```bash
+$ python3 -m pip install requests
+```
+
 To get started, it's recommended that you clone this repo to your computer:
 
 ```bash
@@ -21,7 +32,7 @@ You'll also need to grab yourself a copies of the Vanilla Tweaks data packs.
 
 ## Usage
 
-This package is compatible with Python 3.10 or newer and consists of four modules:
+The `head_hunter` package consists of four modules:
 
 1. `extract`, which extracts files from existing data packs
 1. `parse`, which parses head configurations from data pack functions and `/give` commands
