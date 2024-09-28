@@ -5,10 +5,12 @@ dependencies:
 - python==3.10
 - ipython>=8
 - pip>=24
+- requests
 - pre-commit
 - black
 - isort
 - mypy
+- types-requests
 - jupyterlab>=3
 - jupyterlab_code_formatter
 - pyperclip

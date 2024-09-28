@@ -83,6 +83,11 @@ class HeadSpec(NamedTuple):
         -------
         LegacyHeadSpec
             The corresponding head spec
+
+        Raises
+        ------
+        ValueError
+            If the name provided is not a valid username
         """
         if not re.match(r"^[A-Za-z0-9_]{3,16}$", name):
             raise ValueError(f"{repr(name)} is not a valid Minecraft username")
