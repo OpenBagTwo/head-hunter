@@ -99,6 +99,7 @@ def write_head_trades(
     purchase_limit: int = 3,
     xp_bonus: int = 0,
     pack_format: int = 48,
+    freeze_textures: bool = True,
 ) -> tuple[int, int]:
     """Render the `add_trade.mcfunction` file that will give the
     Wandering Trader a specified list of head trades
@@ -130,6 +131,13 @@ def write_head_trades(
         Minecraft 1.21 and above. To instead wreite the function for an older
         version of Minecraft, pass the pack format version here
         (see: https://minecraft.wiki/w/Data_pack#Pack_format).
+    freeze_textures : bool, optional
+        To avoid scenarios where traded heads have their textures dynamically
+        update—or worse, fail to fetch at all in-game—any trades that were
+        specified via username alone will have their current texture pulled
+        from the Mojang API when this method is called. To disable this
+        feature (for example, if you're running this on a computer without
+        internet access), pass in `freeze_textures=False`.
 
     Returns
     -------
@@ -189,9 +197,11 @@ def write_head_trades(
 
     for head in trades:
         head_spec = (
-            head.to_component_dict()
+            head.to_component_dict(offline=not freeze_textures)
             if pack_format >= 41
-            else head.to_player_head(pack_format=pack_format)
+            else head.to_player_head(
+                pack_format=pack_format, offline=not freeze_textures
+            )
         )
         command = command_template.replace(
             "IDX", str(trade_index := trade_index + 1)  # ++trade_index
