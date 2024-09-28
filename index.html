@@ -121,11 +121,13 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 </li>
 <li class="wm-toc-li-nested collapse">
   <ul class="wm-toctree">
-      <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/parse/" class="wm-article-link wm-toc-text">parse</a>
-</li>
       <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/extract/" class="wm-article-link wm-toc-text">extract</a>
 </li>
       <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/release/" class="wm-article-link wm-toc-text">release</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/parse/" class="wm-article-link wm-toc-text">parse</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/mojang/" class="wm-article-link wm-toc-text">mojang</a>
 </li>
       <li class="wm-toc-li wm-toc-lev3 "><a href="reference/head_hunter/write/" class="wm-article-link wm-toc-text">write</a>
 </li>
@@ -174,8 +176,17 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <a href="https://www.youtube.com/shorts/tbkQ-IXRdbs">everyone's favorite</a> <a href="https://www.youtube.com/watch?v=tVA8eNh7VWs">ex-nitwit</a>
 with your own personalized list of custom player heads.</p>
 <h2 id="installation-and-setup">Installation and Setup</h2>
+<p>This package is compatible with Python 3.10 or newer. The only dependency
+required outside the standard library is
+<a href="https://requests.readthedocs.io/en/latest/user/install/#install">Requests</a>,
+which is included by default in many distributions and which is readily
+available from most system package managers as <code>python-requests</code> (or
+<code>python3-requests</code> for Debian/Ubuntu). As a fallback, you can always install it
+via <a href="https://packaging.python.org/en/latest/tutorials/installing-packages/#use-pip-for-installing">pip</a>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>requests
+</span></code></pre></div></p>
 <p>To get started, it's recommended that you clone this repo to your computer:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OpenBagTwo/head-hunter<span class="w"> </span>-–depth<span class="w"> </span><span class="m">1</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OpenBagTwo/head-hunter<span class="w"> </span>-–depth<span class="w"> </span><span class="m">1</span>
 </span></code></pre></div>
 <p>You'll also need to grab yourself a copies of the Vanilla Tweaks data packs.</p>
 <ol>
@@ -184,7 +195,7 @@ with your own personalized list of custom player heads.</p>
 <li>Download the zip archive and extract the "UNZIP_ME" parent zip file into the "packs" folder.</li>
 </ol>
 <h2 id="usage">Usage</h2>
-<p>This package is compatible with Python 3.10 or newer and consists of four modules:</p>
+<p>The <code>head_hunter</code> package consists of four modules:</p>
 <ol>
 <li><code>extract</code>, which extracts files from existing data packs</li>
 <li><code>parse</code>, which parses head configurations from data pack functions and <code>/give</code> commands</li>
@@ -246,6 +257,6 @@ by this package must be licensed under <a href="https://github.com/OpenBagTwo/he
 </body>
 </html>
 <!--
-MkDocs version : 1.6.0
-Build Date UTC : 2024-07-12 23:03:07.511162+00:00
+MkDocs version : 1.6.1
+Build Date UTC : 2024-09-28 22:08:49.268509+00:00
 -->
