@@ -94,7 +94,7 @@ class HeadSpec(NamedTuple):
         return cls(name, name)
 
     def __str__(self):
-        return self.to_player_head()
+        return self.to_player_head(offline=True)
 
     def __repr__(self):
         representation = f"HeadSpec({repr(self.player_name or self.name)}"
@@ -130,8 +130,9 @@ class HeadSpec(NamedTuple):
             writeme.append(spec)
         return "\n".join(writeme)
 
-    def to_player_head(self, pack_format: int = 48) -> str:
-        """Generate the player head specification for use in commands and
+    def to_player_head(self, pack_format: int = 48, offline: bool = False) -> str:
+        """Generate the player head specification for use in commands and older
+        versions of the game
 
         Parameters
         ----------
@@ -139,6 +140,13 @@ class HeadSpec(NamedTuple):
             The data pack version
             (see: https://minecraft.wiki/w/Data_pack#Pack_format).
             Default is 48 for Minecraft 1.21
+        offline : bool, optional
+            By default, `HeadSpec`s that were created without an explicit
+            texture will have their current texture fetched from the Mojang API
+            when calling this method (to avoid traded heads updating
+            dynamically or—worse—failing to fetch at all in-game). If you're
+            running this on a computer without internet access (or just want the
+            short version of the serialized head spec), pass in `offline=True`.
 
         Returns
         -------
@@ -159,17 +167,32 @@ class HeadSpec(NamedTuple):
           `HeadSpec.to_component_dict()` is the method to generate the
           specification for use in a trade list.
         """
+        texture_override: str | None = None
+        if self.texture is None and self.player_name and not offline:
+            from head_hunter import mojang
+
+            texture_override = mojang.get_players_current_skin(self.player_name)
         if pack_format >= 41:
-            return self._to_v41()
+            return self._to_v41(texture=texture_override)
         if pack_format >= 15:
-            return self._to_v15()
+            return self._to_v15(texture=texture_override)
         if pack_format >= 4:
-            return self._to_v4()
+            return self._to_v4(texture=texture_override)
         raise NotImplementedError(f"Data pack version {pack_format} is not supported.")
 
-    def to_component_dict(self) -> str:
+    def to_component_dict(self, offline: bool = False) -> str:
         """Generate the player head specification for use in trade lists for
         modern versions of the game (Minecraft 1.21 and above)
+
+        Parameters
+        ----------
+        offline : bool, optional
+            By default, `HeadSpec`s that were created without an explicit
+            texture will have their current texture fetched from the Mojang API
+            when calling this method (to avoid traded heads updating
+            dynamically or—worse—failing to fetch at all in-game). If you're
+            running this on a computer without internet access (or just want the
+            short version of the serialized head spec), pass in `offline=True`.
 
         Returns
         -------
@@ -183,7 +206,7 @@ class HeadSpec(NamedTuple):
         41 and above). For older datapacks, use
         `HeadSpec.to_player_head(pack_format=desired_pack_format)`
         """
-        head_spec = self.to_player_head()
+        head_spec = self.to_player_head(offline=offline)
         for component in (
             "item_name",
             "profile",
@@ -196,7 +219,7 @@ class HeadSpec(NamedTuple):
             )
         return head_spec
 
-    def _to_v41(self) -> str:
+    def _to_v41(self, texture: str | None = None) -> str:
         components: list[str] = [
             "minecraft:item_name='"
             + _format_text(
@@ -210,7 +233,9 @@ class HeadSpec(NamedTuple):
             ).replace("'", r"\'")
             + "'"
         ]
-        if profile_spec := _format_profile_v41(self.player_name, self.texture):
+        if profile_spec := _format_profile_v41(
+            self.player_name, texture or self.texture
+        ):
             components.append(f"minecraft:profile={profile_spec}")
         if self.rarity:
             components.append(f'minecraft:rarity="{self.rarity}"')
@@ -228,15 +253,15 @@ class HeadSpec(NamedTuple):
         #     )
         return ", ".join(components)
 
-    def _to_v15(self) -> str:
-        head_str = self._to_v4()
+    def _to_v15(self, texture: str | None = None) -> str:
+        head_str = self._to_v4(texture=texture)
         if self.note_block_sound:
             head_str += (
                 ', BlockEntityTag:{note_block_sound:"' + self.note_block_sound + '"}'
             )
         return head_str
 
-    def _to_v4(self) -> str:
+    def _to_v4(self, texture: str | None = None) -> str:
         if self.rarity and not self.color:
             try:
                 color: str | None = dict(_RARITY_COLORS)[self.rarity]
@@ -262,7 +287,9 @@ class HeadSpec(NamedTuple):
                 + '"}'
             )
         ]
-        if profile_spec := _format_profile_v4(self.player_name, self.texture):
+        if profile_spec := _format_profile_v4(
+            self.player_name, texture or self.texture
+        ):
             components.append(f"SkullOwner:{profile_spec}")
 
         return ", ".join(components)

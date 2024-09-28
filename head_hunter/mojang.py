@@ -1,5 +1,7 @@
 """Functionality for interacting with the Mojang API"""
 
+import time
+import warnings
 from typing import Callable
 
 import requests
@@ -64,6 +66,12 @@ def _get_uuid_from_username(username: str) -> str:
             return response.json()["id"]
         case requests.codes.not_found:
             raise ValueError(response.json()["errorMessage"])
+        case requests.codes.too_many_requests:
+            warnings.warn(
+                "Getting rate limited. Sleeping for 10 seconds before trying again."
+            )
+            time.sleep(10)
+            return _get_uuid_from_username(username)
         case _:
             response.raise_for_status()
     raise requests.RequestException()
@@ -102,6 +110,12 @@ def _get_current_skin_from_uuid(uuid: str) -> str:
             raise ValueError(response.json()["errorMessage"])
         case requests.codes.no_content:
             raise ValueError(f"Couldn't find any profile with UUID {uuid}")
+        case requests.codes.too_many_requests:
+            warnings.warn(
+                "Getting rate limited. Sleeping for 10 seconds before trying again."
+            )
+            time.sleep(10)
+            return _get_current_skin_from_uuid(uuid)
         case _:
             response.raise_for_status()
     raise requests.RequestException()
