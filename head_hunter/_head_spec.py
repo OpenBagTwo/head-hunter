@@ -130,7 +130,7 @@ class HeadSpec(NamedTuple):
             writeme.append(spec)
         return "\n".join(writeme)
 
-    def to_player_head(self, pack_format: int = 48, offline: bool = False) -> str:
+    def to_player_head(self, pack_format: int = 71, offline: bool = False) -> str:
         """Generate the player head specification for use in commands and older
         versions of the game
 
@@ -139,7 +139,7 @@ class HeadSpec(NamedTuple):
         pack_format : int, optional
             The data pack version
             (see: https://minecraft.wiki/w/Data_pack#Pack_format).
-            Default is 48 for Minecraft 1.21
+            Default is 71 for Minecraft 1.21.5
         offline : bool, optional
             By default, `HeadSpec`s that were created without an explicit
             texture will have their current texture fetched from the Mojang API
@@ -172,6 +172,8 @@ class HeadSpec(NamedTuple):
             from head_hunter import mojang
 
             texture_override = mojang.get_players_current_skin(self.player_name)
+        if pack_format >= 71:
+            return self._to_v71(texture=texture_override)
         if pack_format >= 41:
             return self._to_v41(texture=texture_override)
         if pack_format >= 15:
@@ -218,6 +220,39 @@ class HeadSpec(NamedTuple):
                 f"minecraft:{component}=", f'"minecraft:{component}":'
             )
         return head_spec
+
+    def _to_v71(self, texture: str | None = None) -> str:
+        components: list[str] = [
+            "minecraft:item_name="
+            + _format_text(
+                self.name,
+                color=self.color,
+                italic=self.italic,
+                bold=self.bold,
+                underlined=self.underlined,
+                strikethrough=self.strikethrough,
+                obfuscated=self.obfuscated,
+            )
+        ]
+        if profile_spec := _format_profile_v41(
+            self.player_name, texture or self.texture
+        ):
+            components.append(f"minecraft:profile={profile_spec}")
+        if self.rarity:
+            components.append(f'minecraft:rarity="{self.rarity}"')
+        if self.note_block_sound:
+            components.append(f'minecraft:note_block_sound="{self.note_block_sound}"')
+
+        # TODO
+        # if self.lore:
+        #     components.append(
+        #         "minecraft:lore=[{lore}]".format(
+        #             lore=", ".join(
+        #                 (_format_text(**lore_line) for lore_line in self.lore)
+        #             )
+        #         )
+        #     )
+        return ", ".join(components)
 
     def _to_v41(self, texture: str | None = None) -> str:
         components: list[str] = [

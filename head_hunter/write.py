@@ -15,7 +15,7 @@ _NAMESPACE_DIR = PACK_FOLDER / "data" / "wandering_trades"
 def write_meta_files(
     *template_paths: str | PathLike,
     version: str | None = None,
-    pack_format: int = 48,
+    pack_format: int = 71,
 ) -> None:
     """Write a metadata file (or files), using the template in the templates
     folder (or one(s) you brought yourself)
@@ -98,7 +98,7 @@ def write_head_trades(
     price: tuple[str, int] | None = None,
     purchase_limit: int = 3,
     xp_bonus: int = 0,
-    pack_format: int = 48,
+    pack_format: int = 71,
     freeze_textures: bool = True,
 ) -> tuple[int, int]:
     """Render the `add_trade.mcfunction` file that will give the
@@ -128,7 +128,7 @@ def write_head_trades(
         is that buying player heads does not award experience.
     pack_format : int, optional
         By default, this function will generate function files compatible with
-        Minecraft 1.21 and above. To instead wreite the function for an older
+        Minecraft 1.21 and above. To instead write the function for an older
         version of Minecraft, pass the pack format version here
         (see: https://minecraft.wiki/w/Data_pack#Pack_format).
     freeze_textures : bool, optional
