@@ -1,6 +1,9 @@
 {
 	"pack": {
 		"pack_format": PACK_FORMAT,
+        "min_format": PACK_FORMAT,
+        "max_format": 99999,
+        "supported_formats": {"min_inclusive": PACK_FORMAT, "max_inclusive": 99999},
 		"description": [
 			{"text":"Custom Wandering Head Trader","color":"aqua"},
 			{"text":"\nVERSION","color":"dark_red"},
