@@ -1,0 +1,27 @@
+{
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": [
+      "",
+      {
+        "color": "gold",
+        "text": "Adds customized head trades to the wandering trader.\n"
+      },
+      {
+        "color": "dark_red",
+        "text": "VERSION"
+      }
+    ],
+    "icon": {
+      "ICON_KEY": "minecraft:crossbow"
+    },
+    "show_toast": false,
+    "title": "Wandering Head Hunter    "
+  },
+  "parent": "vanillatweaks:root"
+}

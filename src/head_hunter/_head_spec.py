@@ -1,7 +1,8 @@
 """Functionality for abstracting and serializing player heads"""
 
 import re
-from typing import Iterable, NamedTuple
+from collections.abc import Iterable
+from typing import NamedTuple
 
 _RARITY_COLORS = (
     ("common", "white"),
@@ -90,18 +91,18 @@ class HeadSpec(NamedTuple):
             If the name provided is not a valid username
         """
         if not re.match(r"^[A-Za-z0-9_]{3,16}$", name):
-            raise ValueError(f"{repr(name)} is not a valid Minecraft username")
+            raise ValueError(f"{name!r} is not a valid Minecraft username")
         return cls(name, name)
 
     def __str__(self):
         return self.to_player_head(offline=True)
 
     def __repr__(self):
-        representation = f"HeadSpec({repr(self.player_name or self.name)}"
+        representation = f"HeadSpec({self.player_name or self.name!r}"
         if self.player_name and self.player_name != self.name:
-            representation += f",name={repr(self.name)}"
+            representation += f",name={self.name!r}"
         if self.comment:
-            representation += f",comment={repr(self.comment)}"
+            representation += f",comment={self.comment!r}"
         return representation + ")"
 
     def dumps(self) -> str:
@@ -121,7 +122,7 @@ class HeadSpec(NamedTuple):
             writeme.append(self.name)
         spec = ", ".join(
             (
-                f"{key}={repr(value)}"
+                f"{key}={value!r}"
                 for key, value in self._asdict().items()
                 if key not in ("name", "comment") and value
             )
@@ -369,9 +370,9 @@ def loads(head_list: str | bytes) -> list[HeadSpec]:
         if len(lines) == 1:
             heads.append(HeadSpec.from_username(lines[0]))
         else:
-            to_eval = f"name={repr(lines[-2])}, {lines[-1]}"
+            to_eval = f"name={lines[-2]!r}, {lines[-1]}"
             if len(lines) == 3:
-                to_eval += f", comment={repr(lines[0])}"
+                to_eval += f", comment={lines[0]!r}"
             heads.append(HeadSpec(**eval(f"dict({to_eval})")))
     return heads
 

@@ -1,13 +1,12 @@
 # [Head Hunter](https://github.com/OpenBagTwo/head-hunter)
 
-A package for customizing [**Vanilla Tweaks'**](https://vanillatweaks.net)
-[Wandering Trades data pack](https://www.youtube.com/watch?v=L3En7cuOdHY) to stock
-[everyone's favorite](https://www.youtube.com/shorts/tbkQ-IXRdbs) [ex-nitwit](https://www.youtube.com/watch?v=tVA8eNh7VWs)
-with your own personalized list of custom player heads.
+A package for adding custom player heads to the Wandering Trader's trade list,
+based on and compatible with [**Vanilla Tweaks'**](https://vanillatweaks.net)
+[Wandering Trades data pack](https://www.youtube.com/watch?v=L3En7cuOdHY).
 
 ## Installation and Setup
 
-This package is compatible with Python 3.10 or newer. The only dependency
+This package is compatible with Python 3.11 or newer. The only dependency
 required outside the standard library is
 [Requests](https://requests.readthedocs.io/en/latest/user/install/#install),
 which is included by default in many distributions and which is readily

@@ -1,7 +1,7 @@
 """Functionality for maintaining compatibility with 1.20.4- datapacks"""
 
 import re
-from typing import Iterable, NamedTuple
+from typing import NamedTuple
 
 _FORMATTING_CODES = (
     ("§0", "c*black"),

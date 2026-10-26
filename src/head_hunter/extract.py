@@ -4,11 +4,12 @@ import fnmatch
 import os
 import shutil
 import warnings
+from collections.abc import Generator, Iterable
 from contextlib import contextmanager
 from os import PathLike
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import IO, Generator, Iterable
+from typing import IO
 from zipfile import BadZipFile, ZipFile
 
 from . import PACK_FOLDER
@@ -146,7 +147,7 @@ def file_from_data_pack(
     else:
         raise KeyError(
             "Could not find the requested resource in any of the provided locations."
-            "\nChecked:\n" + "\n".join((f" - {location}" for location in locations))
+            "\nChecked:\n" + "\n".join(f" - {location}" for location in locations)
         )
 
 

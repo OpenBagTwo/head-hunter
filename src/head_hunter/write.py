@@ -1,9 +1,9 @@
 """Utilities for writing / updating data pack files"""
 
 import datetime as dt
+from collections.abc import Iterable
 from os import PathLike
 from pathlib import Path
-from typing import Iterable
 
 from . import BLOCK_TRADE_FILENAME, HEAD_TRADE_FILENAME, PACK_FOLDER, HeadSpec
 
@@ -204,7 +204,8 @@ def write_head_trades(
             )
         )
         command = command_template.replace(
-            "IDX", str(trade_index := trade_index + 1)  # ++trade_index
+            "IDX",
+            str(trade_index := trade_index + 1),  # ++trade_index
         ).replace("HEAD_SPEC", head_spec)
         commands.append(command)
 

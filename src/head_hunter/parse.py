@@ -285,8 +285,7 @@ def parse_mob_heads(mob: str | PathLike) -> list[HeadSpec]:
                 return _parse_mob_heads(mob_file)
         except KeyError:
             continue
-    else:
-        raise FileNotFoundError(f"Could not find a loot table for {mob}")
+    raise FileNotFoundError(f"Could not find a loot table for {mob}")
 
 
 def _parse_mob_heads(mob_file: IO) -> list[HeadSpec]:
